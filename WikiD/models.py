@@ -36,24 +36,38 @@ class User:
         else:
             return False
 
-    def add_post(self, title, tags, text):
+    def add_post(self, title):
         user = self.find()
         post = Node(
             "Post",
             id=str(uuid.uuid4()),
             title=title,
-            text=text,
             timestamp=timestamp(),
             date=date()
         )
         rel = Relationship(user, "PUBLISHED", post)
         graph.create(rel)
 
-        tags = [x.strip() for x in tags.lower().split(',')]
-        for t in set(tags):
-            tag = graph.merge_one("Tag", "name", t)
-            rel = Relationship(tag, "TAGGED", post)
-            graph.create(rel)
+#        tags = [x.strip() for x in tags.lower().split(',')]
+#        for t in set(tags):
+#            tag = graph.merge_one("Tag", "name", t)
+#            rel = Relationship(tag, "TAGGED", post)
+#            graph.create(rel)
+
+    def agree_with_post(self, post_id):
+        user = self.find()
+        post = graph.find_one("Post", "id", post_id)
+        graph.create_unique(Relationship(user, "AGREED_WITH", post))
+
+    def disagree_with_post(self, post_id):
+        user = self.find()
+        post = graph.find_one("Post", "id", post_id)
+        graph.create_unique(Relationship(user, "DISAGREED_WITH", post))
+
+    def undecided_on_post(self, post_id):
+        user = self.find()
+        post = graph.find_one("Post", "id", post_id)
+        graph.create_unique(Relationship(user, "UNDECIDED_ON", post))
 
     def like_post(self, post_id):
         user = self.find()
@@ -62,9 +76,9 @@ class User:
 
     def get_recent_posts(self):
         query = """
-        MATCH (user:User)-[:PUBLISHED]->(post:Post)<-[:TAGGED]-(tag:Tag)
+        MATCH (user:User)-[:PUBLISHED]->(post:Post)
         WHERE user.username = {username}
-        RETURN post, COLLECT(tag.name) AS tags
+        RETURN post
         ORDER BY post.timestamp DESC LIMIT 5
         """
 
@@ -100,9 +114,9 @@ class User:
 
 def get_todays_recent_posts():
     query = """
-    MATCH (user:User)-[:PUBLISHED]->(post:Post)<-[:TAGGED]-(tag:Tag)
+    MATCH (user:User)-[:PUBLISHED]->(post:Post)
     WHERE post.date = {today}
-    RETURN user.username AS username, post, COLLECT(tag.name) AS tags
+    RETURN user.username AS username, post 
     ORDER BY post.timestamp DESC LIMIT 5
     """
 

@@ -9,3 +9,7 @@ def create_uniqueness_constraint(label, property):
 create_uniqueness_constraint("User", "username")
 create_uniqueness_constraint("Tag", "name")
 create_uniqueness_constraint("Post", "id")
+create_uniqueness_constraint("Inode", "id")
+create_uniqueness_constraint("Enode", "id")
+create_uniqueness_constraint("Snode", "id")
+create_uniqueness_constraint("Vote", "id")
