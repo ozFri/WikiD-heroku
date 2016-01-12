@@ -3,5 +3,5 @@
 *.DS_Store
 instance/
 _site/
-*.swp
-*.swo
+.*.swp
+.*.swo
