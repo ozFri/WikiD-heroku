@@ -7,6 +7,9 @@
         {% endif %}
     	on {{ row.post.date }}
     	<a href="{{ url_for('like_post', post_id=row.post.id) }}">like</a><br>
+    	<a href="{{ url_for('agree_with_post', post_id=row.post.id) }}">agree</a><br>
+    	<a href="{{ url_for('disagree_with_post', post_id=row.post.id) }}">disagree</a><br>
+    	<a href="{{ url_for('undecided_on_post', post_id=row.post.id) }}">undecided</a><br>
     	<i>{{ ", ".join(row.tags) }}</i><br>
     	{{ row.post.text }}
   {% else %}

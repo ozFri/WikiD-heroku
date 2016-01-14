@@ -72,6 +72,45 @@ def like_post(post_id):
     flash('Liked post.')
     return redirect(request.referrer)
 
+@app.route('/agree_with_post/<post_id>')
+def agree_with_post(post_id):
+    username = session.get('username')
+
+    if not username:
+        flash('You must be logged in to agree with a post.')
+        return redirect(url_for('login'))
+
+    User(username).agree_with_post(post_id)
+
+    flash('Agreed with post.')
+    return redirect(request.referrer)
+
+@app.route('/disagree_with_post/<post_id>')
+def disagree_with_post(post_id):
+    username = session.get('username')
+
+    if not username:
+        flash('You must be logged in to disagree with a post.')
+        return redirect(url_for('login'))
+
+    User(username).disagree_with_post(post_id)
+
+    flash('Disagreed with post.')
+    return redirect(request.referrer)
+
+@app.route('/agree_with_post/<post_id>')
+def undecided_on_post(post_id):
+    username = session.get('username')
+
+    if not username:
+        flash('You must be logged in to follow a post.')
+        return redirect(url_for('login'))
+
+    User(username).undecided_on_post(post_id)
+
+    flash('Undecided on post.')
+    return redirect(request.referrer)
+
 @app.route('/profile/<username>')
 def profile(username):
     logged_in_username = session.get('username')
