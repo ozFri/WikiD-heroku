@@ -1,7 +1,7 @@
   <ul class="posts">
   {% for row in posts %}
     <li>
-    	<b>{{ row.post.title }}</b>
+        <b><a href="{{ url_for('post', post_id=row.post.id)}}">{{ row.post.title }}</a></b>
         {% if request.path == "/" %}
     	by <a href="{{ url_for('profile', username=row.username) }}">{{ row.username }}</a>
         {% endif %}

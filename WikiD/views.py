@@ -1,4 +1,4 @@
-from models import User, get_todays_recent_posts
+from models import User, get_todays_recent_posts, get_post
 from flask import Flask, request, session, redirect, url_for, render_template, flash
 
 app = Flask(__name__)
@@ -7,6 +7,11 @@ app = Flask(__name__)
 def index():
     posts = get_todays_recent_posts()
     return render_template('index.html', posts=posts)
+
+@app.route('/posts/<post_id>')
+def post(post_id):
+    post = get_post(post_id)
+    return render_template('post.html', post=post)
 
 @app.route('/register', methods=['GET','POST'])
 def register():
@@ -98,10 +103,9 @@ def disagree_with_post(post_id):
     flash('Disagreed with post.')
     return redirect(request.referrer)
 
-@app.route('/agree_with_post/<post_id>')
+@app.route('/undecided_on_post/<post_id>')
 def undecided_on_post(post_id):
     username = session.get('username')
-
     if not username:
         flash('You must be logged in to follow a post.')
         return redirect(url_for('login'))
