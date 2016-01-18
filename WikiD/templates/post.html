@@ -3,4 +3,9 @@
 
 {{post.title}}
 {{post.date}}
+<p>
+    <a href="{{ url_for('agree_with_post', post_id=post.id) }}">agree</a><br>
+    <a href="{{ url_for('disagree_with_post', post_id=post.id) }}">disagree</a><br>
+    <a href="{{ url_for('undecided_on_post', post_id=post.id) }}">undecided</a><br>
+</p>
 {% endblock %}
