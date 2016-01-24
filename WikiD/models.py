@@ -53,15 +53,22 @@ class User:
 #            tag = graph.merge_one("Tag", "name", t)
 #            rel = Relationship(tag, "TAGGED", post)
 #            graph.create(rel)
+    def votetozero(self,event,post):
+        oldvote = graph.match(start_node=event,rel_type=None,end_node=post) 
+        if oldvote != None:
+            for rel in oldvote:
+                graph.delete(rel)
+    
     def agree_with_post(self, post_id, event_name = "General"):
         user = self.find()
         post = graph.find_one("Post", "id", post_id)
-        cypher_string = "MATCH (n:User {username:'" + user.properties["username"] + "'})-[r]->(:Enode {name:'" + event_name + "'})            RETURN count(n) "
+        cypher_string_find_event = "MATCH (n:User {username:'" + user.properties["username"] + "'})-[r]->(:Enode {name:'" + event_name + "'})            RETURN count(n) "
         #check if user observes this event, and that it exists.
-        if not graph.cypher.execute(cypher_string).one:
+        if not graph.cypher.execute(cypher_string_find_event).one:
             event=create_new_event(event_name,user) 
         else:
             event=graph.find_one("Enode","name",event_name)
+        self.votetozero(event,post) 
         graph.create_unique(
             Relationship(user, "IN_EVENT", event),
             Relationship(event, "AGREES_WITH", post)        )
@@ -75,6 +82,7 @@ class User:
             event=create_new_event(event_name,user) 
         else:
             event=graph.find_one("Enode","name",event_name)
+        self.votetozero(event,post) 
         graph.create_unique(
             Relationship(user, "IN_EVENT", event),
             Relationship(event, "DISAGREES_WITH", post)        )
@@ -84,14 +92,15 @@ class User:
         post = graph.find_one("Post", "id", post_id)
         cypher_string = "MATCH (n:User {username:'" + user.properties["username"] + "'})-[r]->(:Enode {name:'" + event_name + "'})            RETURN count(n) "
         #check if user observes this event, and that it exists.
-        #if not graph.cypher.execute(cypher_string).one:
-        #    event=create_new_event(event_name,user) 
-        #else:
-        #    event=graph.find_one("Enode","name",event_name)
-        #graph.create_unique(
-        #    Relationship(user, "IN_EVENT", event),
-        #    Relationship(event, "UNDECIDED_ON", post)
-         #   )
+        if not graph.cypher.execute(cypher_string).one:
+            event=create_new_event(event_name,user) 
+        else:
+            event=graph.find_one("Enode","name",event_name)
+        self.votetozero(event,post) 
+        graph.create_unique(
+            Relationship(user, "IN_EVENT", event),
+            Relationship(event, "UNDECIDED_ON", post)
+           )
 
     def like_post(self, post_id):
         user = self.find()
@@ -103,7 +112,7 @@ class User:
         MATCH (user:User)-[:PUBLISHED]->(post:Post)
         WHERE user.username = {username}
         RETURN post
-        ORDER BY post.timestamp DESC LIMIT 5
+        ORDER BY post.timestamp DESC LIMIT 500
         """
 
         return graph.cypher.execute(query, username=self.username)

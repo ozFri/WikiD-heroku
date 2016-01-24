@@ -5,6 +5,12 @@ h1, h2          { border-bottom: 2px solid #eee; padding: 3px; }
 h3              { padding: 3px; }
 dd              { display: block; margin-left: 0px; }
 dl              { font-weight: bold; }
+.post-title:link, .post-title:visited  { text-decoration:none; color:#227590;} 
+.post-title:hover { text-decoration:none; color:#4295b0;} 
+.votemenu div   {display:none;}
+.votemenu div:target   {display:block; border:1px solid blue}
+.votemenu a     {color:blue; text-decoration:none;}
+.votemenu a:visited     {color:blue; text-decoration:none;}
 a:visited 		{ color: #800080; }
 .page           { margin: 2em auto; width: 35em; border: 5px solid #ccc; padding: 0.8em; background: white; }
 .posts          { list-style: none; margin: 0; padding: 0; }

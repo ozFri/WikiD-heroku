@@ -1,18 +1,22 @@
   <ul class="posts">
   {% for row in posts %}
     <li>
-        <b><a href="{{ url_for('post', post_id=row.post.id)}}">{{ row.post.title }}</a></b>
+        <b><a class="post-title" href="{{ url_for('post', post_id=row.post.id)}}">{{ row.post.title }}</a></b>
         {% if request.path == "/" %}
     	by <a href="{{ url_for('profile', username=row.username) }}">{{ row.username }}</a>
         {% endif %}
     	on {{ row.post.date }}
-    	<a href="{{ url_for('like_post', post_id=row.post.id) }}">like</a><br>
-    	<a href="{{ url_for('agree_with_post', post_id=row.post.id) }}">agree</a><br>
-    	<a href="{{ url_for('disagree_with_post', post_id=row.post.id) }}">disagree</a><br>
-    	<a href="{{ url_for('undecided_on_post', post_id=row.post.id) }}">undecided</a><br>
-    	<i>{{ ", ".join(row.tags) }}</i><br>
-    	{{ row.post.text }}
+        <div class="votemenu">
+            <a href="#vote-menu{{loop.index}}">vote</a>
+            <div id="vote-menu{{loop.index}}">
+                <a href="{{ url_for('agree_with_post', post_id=row.post.id) }}">agree</a><br>
+                <a href="{{ url_for('disagree_with_post', post_id=row.post.id) }}">disagree</a><br>
+                <a href="{{ url_for('undecided_on_post', post_id=row.post.id) }}">undecided</a><br>
+            </div>
+        </div>
   {% else %}
-    <li>There aren't any posts yet!
+    <li>there aren't any posts yet!
   {% endfor %}
   </ul>
+
+  <!--<script type=text/javascript src="{{ url_for('static', filename='javascript/util.js') }}"></script>-> 
