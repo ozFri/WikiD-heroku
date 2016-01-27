@@ -76,7 +76,7 @@ class User:
 
     def disagree_with_post(self, post_id, event_name):
         user = self.find()
-        post = graph.find_one("Post", "id", post_id ,event_name)
+        post = graph.find_one("Post", "id", post_id)
         cypher_string = "MATCH (n:User {username:'" + user.properties["username"] + "'})-[r]->(:Enode {name:'" + event_name + "'})            RETURN count(n) "
         #check if user observes this event, and that it exists.
         if not graph.cypher.execute(cypher_string).one:
