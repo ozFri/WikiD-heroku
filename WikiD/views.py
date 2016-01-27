@@ -3,10 +3,17 @@ from flask import Flask, request, session, redirect, url_for, render_template, f
 
 app = Flask(__name__)
 
+@app.route('/index')
 @app.route('/')
 def index():
     posts = get_todays_recent_posts()
     return render_template('index.html', posts=posts)
+
+@app.route('/event')
+def event():
+    session['eventname']="General"
+    flash(session['eventname'])
+    return render_template('index.html')
 
 @app.route('/posts/<post_id>')
 def post(post_id):
@@ -42,6 +49,7 @@ def login():
             flash('Invalid login.')
         else:
             session['username'] = username
+            session['eventname'] = "General"
             flash('Logged in.')
             return redirect(url_for('index'))
 
@@ -50,8 +58,14 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('username', None)
+    session.pop('eventname',None)
     flash('Logged out.')
     return redirect(url_for('index'))
+
+@app.route('/change_event', methods=['POST'])
+def change_event():
+    session["eventname"]=request.form['event']
+    return redirect(request.referrer)
 
 @app.route('/add_post', methods=['POST'])
 def add_post():
@@ -64,55 +78,57 @@ def add_post():
 
     return redirect(url_for('index'))
 
-@app.route('/like_post/<post_id>')
-def like_post(post_id):
-    username = session.get('username')
-
-    if not username:
-        flash('You must be logged in to like a post.')
-        return redirect(url_for('login'))
-
-    User(username).like_post(post_id)
-
-    flash('Liked post.')
-    return redirect(request.referrer)
+#@app.route('/like_post/<post_id>')
+#def like_post(post_id):
+#    username = session.get('username')
+#
+#    if not username:
+#        flash('You must be logged in to like a post.')
+#        return redirect(url_for('login'))
+#
+#    User(username).like_post(post_id)
+#
+#    flash('Liked post.')
+#    return redirect(request.referrer)
 
 @app.route('/agree_with_post/<post_id>')
 def agree_with_post(post_id):
     username = session.get('username')
-
+    eventname = session.get('eventname')
     if not username:
         flash('You must be logged in to agree with a post.')
         return redirect(url_for('login'))
 
-    User(username).agree_with_post(post_id)
+    User(username).agree_with_post(post_id, eventname)
 
-    flash('Agreed with post.')
+    flash('Agreed with post in event "'+ eventname + '"')
     return redirect(request.referrer)
 
 @app.route('/disagree_with_post/<post_id>')
 def disagree_with_post(post_id):
     username = session.get('username')
+    eventname = session.get('eventname')
 
     if not username:
         flash('You must be logged in to disagree with a post.')
         return redirect(url_for('login'))
 
-    User(username).disagree_with_post(post_id)
+    User(username).disagree_with_post(post_id, eventname)
 
-    flash('Disagreed with post.')
+    flash('Disagreed with post in event "'+ eventname + '"')
     return redirect(request.referrer)
 
 @app.route('/undecided_on_post/<post_id>')
 def undecided_on_post(post_id):
     username = session.get('username')
+    eventname = session.get('eventname')
     if not username:
         flash('You must be logged in to follow a post.')
         return redirect(url_for('login'))
 
-    User(username).undecided_on_post(post_id)
+    User(username).undecided_on_post(post_id, eventname)
 
-    flash('Undecided on post.')
+    flash('Undecided on post in event "'+ eventname + '"' )
     return redirect(request.referrer)
 
 @app.route('/profile/<username>')

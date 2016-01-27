@@ -6,7 +6,9 @@
   <div class="metanav">
   {% if session.username %}
   Logged in as {{ session.username }}
-  {% endif %}
+   <span id="event">Event:{{session.eventname}}</span>
+      <span id="select-event">(Select Event)</span>
+ {% endif %}
   <a href="{{ url_for('index') }}">Home</a>
   {% if not session.username %}
     <a href="{{ url_for('register') }}">Register</a>

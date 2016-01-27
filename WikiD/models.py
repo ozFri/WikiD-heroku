@@ -13,6 +13,7 @@ if username and password:
 
 graph = Graph(url + '/db/data/')
 
+
 class User:
     def __init__(self, username):
         self.username = username
@@ -59,13 +60,13 @@ class User:
             for rel in oldvote:
                 graph.delete(rel)
     
-    def agree_with_post(self, post_id, event_name = "General"):
+    def agree_with_post(self, post_id, event_name):
         user = self.find()
         post = graph.find_one("Post", "id", post_id)
         cypher_string_find_event = "MATCH (n:User {username:'" + user.properties["username"] + "'})-[r]->(:Enode {name:'" + event_name + "'})            RETURN count(n) "
         #check if user observes this event, and that it exists.
         if not graph.cypher.execute(cypher_string_find_event).one:
-            event=create_new_event(event_name,user) 
+            event=create_new_event(user,event_name) 
         else:
             event=graph.find_one("Enode","name",event_name)
         self.votetozero(event,post) 
@@ -73,13 +74,13 @@ class User:
             Relationship(user, "IN_EVENT", event),
             Relationship(event, "AGREES_WITH", post)        )
 
-    def disagree_with_post(self, post_id, event_name = "General"):
+    def disagree_with_post(self, post_id, event_name):
         user = self.find()
-        post = graph.find_one("Post", "id", post_id)
+        post = graph.find_one("Post", "id", post_id ,event_name)
         cypher_string = "MATCH (n:User {username:'" + user.properties["username"] + "'})-[r]->(:Enode {name:'" + event_name + "'})            RETURN count(n) "
         #check if user observes this event, and that it exists.
         if not graph.cypher.execute(cypher_string).one:
-            event=create_new_event(event_name,user) 
+            event=create_new_event(user,event_name) 
         else:
             event=graph.find_one("Enode","name",event_name)
         self.votetozero(event,post) 
@@ -87,13 +88,13 @@ class User:
             Relationship(user, "IN_EVENT", event),
             Relationship(event, "DISAGREES_WITH", post)        )
 
-    def undecided_on_post(self, post_id, event_name = "General"):
+    def undecided_on_post(self, post_id, event_name):
         user = self.find()
         post = graph.find_one("Post", "id", post_id)
         cypher_string = "MATCH (n:User {username:'" + user.properties["username"] + "'})-[r]->(:Enode {name:'" + event_name + "'})            RETURN count(n) "
         #check if user observes this event, and that it exists.
         if not graph.cypher.execute(cypher_string).one:
-            event=create_new_event(event_name,user) 
+            event=create_new_event(user,event_name) 
         else:
             event=graph.find_one("Enode","name",event_name)
         self.votetozero(event,post) 
@@ -145,11 +146,11 @@ class User:
 
         return graph.cypher.execute(query, they=other.username, you=self.username)[0]
 
-def create_new_event (event_name, user):
+def create_new_event (user, event_name ="General"):
     event=Node(
             "Enode",
             id=str(uuid.uuid4()),
-            name="General",
+            name=event_name,
             timestamp=timestamp(),
             date=date()
         ) 
