@@ -2,11 +2,14 @@ body            { font-family: sans-serif; background: #eee; }
 a, h1, h3       { color: #377ba8; }
 h1, h2, h3      { font-family: 'Georgia', serif; margin: 0; }
 h1, h2          { border-bottom: 2px solid #eee; padding: 3px; }
+h1              { text-align:center;}
 h3              { padding: 3px; }
 dd              { display: block; margin-left: 0px; }
 dl              { font-weight: bold; }
+.post-header    { float:inline-block; margin:auto; text-align:center;}
 .post-title:link, .post-title:visited  { text-decoration:none; color:#227590;} 
 .post-title:hover { text-decoration:none; color:#4295b0;} 
+.votemenu       {margin: auto; text-align:center;}
 .votemenu div   {display:none;}
 .votemenu div:target   {display:block; border:1px solid blue}
 .votemenu a     {color:blue; text-decoration:none;}
@@ -21,3 +24,5 @@ a:visited 		{ color: #800080; }
 .error          { background: #f0d6d6; padding: 0.5em; }
 #event          { background: #CCFFCC;display:inline-block; float:initial; clear:left;}
 #select-event          { font-size:70%; background: #9999FF; display:inline-block; float:left; clear:left; margin-left:60%} 
+#schemamenu-left {display: block; float: left; background:#99DDFF; width:30%;}
+#schemamenu-right{display: block; float: right; background:teal; width:30%;}

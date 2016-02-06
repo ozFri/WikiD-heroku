@@ -13,7 +13,55 @@ if username and password:
 
 graph = Graph(url + '/db/data/')
 
+class Post:
+    def __init__(self, postid):
+        self.node=get_post(postid)
+        self.posts=self.get_posts()
+        self.title=self.node.properties["title"]
+        self.supporting=self.get_supporting()
+        self.opposing=self.get_opposing()
+        self.supported=self.get_supported()
+        self.opposed=self.get_opposed()
+    def get_posts(self):
+        query = """
+        MATCH (user:User)-[:PUBLISHED]->(post:Post)
+        RETURN user.username AS username, post 
+        ORDER BY post.timestamp DESC LIMIT 5
+        """
 
+        return graph.cypher.execute(query)
+
+    def get_supporting(self):
+        query = """
+        MATCH (post)-[]->(snode:Snode{schema:"Supports"})-[]->({title:""" + '"' + self.title + '"' + """ })
+        RETURN post,snode
+        ORDER BY post.timestamp DESC LIMIT 5
+        """
+        return graph.cypher.execute(query)
+    def get_opposing(self):
+        query = """
+        MATCH (post)-[]->(snode:Snode{schema:"Opposes"})-[]->({title:""" + '"' + self.title + '"' + """ })
+        RETURN post,snode
+        ORDER BY post.timestamp DESC LIMIT 5
+        """
+        return graph.cypher.execute(query)
+
+    def get_supported(self):
+        query = """
+        MATCH (post)<-[]-(snode:Snode{schema:"Supports"})<-[]-({title:""" + '"' + self.title + '"' + """ })
+        RETURN post,snode
+        ORDER BY post.timestamp DESC LIMIT 5
+        """
+        return graph.cypher.execute(query)
+
+    def get_opposed(self):
+        query = """
+        MATCH (post)<-[]-(snode:Snode{schema:"Opposes"})<-[]-({title:""" + '"' + self.title + '"' + """ })
+        RETURN post,snode
+        ORDER BY post.timestamp DESC LIMIT 5
+        """
+        return graph.cypher.execute(query)
+        
 class User:
     def __init__(self, username):
         self.username = username

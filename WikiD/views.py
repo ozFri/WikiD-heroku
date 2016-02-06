@@ -1,4 +1,4 @@
-from models import User, get_todays_recent_posts, get_post
+from models import User, Post, get_todays_recent_posts, get_post
 from flask import Flask, request, session, redirect, url_for, render_template, flash
 
 app = Flask(__name__)
@@ -15,9 +15,21 @@ def event():
     flash(session['eventname'])
     return render_template('index.html')
 
+@app.route('/add-Snode')
+def add_Snode(post_id):
+    post=post_id
+    schema=request.form['schema']
+    target=request.form['target']
+    Post.add_Snode(post,schema,target)
+
 @app.route('/posts/<post_id>')
 def post(post_id):
-    post = get_post(post_id)
+    post = Post(post_id)
+    posts = post.get_posts
+    supporting_posts = post.supporting
+    opposing_posts = post.opposing
+    supported_posts = post.supported
+    opposed_posts = post.opposed
     return render_template('post.html', post=post)
 
 @app.route('/register', methods=['GET','POST'])

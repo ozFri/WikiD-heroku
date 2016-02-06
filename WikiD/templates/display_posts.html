@@ -3,7 +3,7 @@
     <li>
         <b><a class="post-title" href="{{ url_for('post', post_id=row.post.id)}}">{{ row.post.title }}</a></b>
         {% if request.path == "/" %}
-    	by <a href="{{ url_for('profile', username=row.username) }}">{{ row.username }}</a>
+    by <a href="{{ url_for('profile', username=row.username) }}">{{ row.username }}</a>
         {% endif %}
     	on {{ row.post.date }}
         <div class="votemenu">
