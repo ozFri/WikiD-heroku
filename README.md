@@ -15,7 +15,7 @@ $ export NEO4J_PASSWORD=password
 
 Or, set `dbms.security.auth_enabled=false` in `conf/neo4j-server.properties`.
 
-Then:
+Then with bash shell:
 
 ```
 cd cloned_dir
@@ -25,5 +25,16 @@ source venv/bin/activate
 pip install -r requirements.txt
 python run.py
 ```
+Then with fish shell:
+
+```
+cd cloned_dir
+pip install virtualenv
+virtualenv venv
+. venv/bin/activate.fish
+pip install -r requirements.txt
+python run.py
+```
+
 
 [http://localhost:5000](http://localhost:5000)
