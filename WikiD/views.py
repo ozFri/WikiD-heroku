@@ -99,7 +99,7 @@ def add_post():
 
     return redirect(url_for('index'))
 
-#@app.route('/like_post/<post_id>')
+# @app.route('/like_post/<post_id>')
 # def like_post(post_id):
 #    username = session.get('username')
 #
