@@ -1,5 +1,4 @@
 from .views import app
-from .models import graph
 
 graphNodes = [("User", "username"),
               ("Tag", "name"),

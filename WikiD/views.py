@@ -1,5 +1,6 @@
-from .models import User, Post, get_todays_recent_posts, get_post
+from .models import Post, get_todays_recent_posts, get_post
 from flask import Flask, request, session, redirect, url_for, render_template, flash
+from .user import User
 
 app = Flask(__name__)
 
@@ -43,13 +44,7 @@ def register():
         username = request.form['username']
         password = request.form['password']
 
-        if len(username) < 1:
-            flash('Your username must be at least one character.')
-        elif len(password) < 5:
-            flash('Your password must be at least 5 characters.')
-        elif not User(username).register(password):
-            flash('A user with that username already exists.')
-        else:
+        if User.register_validation(flash, username, password):
             session['username'] = username
             flash('Logged in.')
             return redirect(url_for('index'))
