@@ -1,7 +1,8 @@
-from models import User, Post, get_todays_recent_posts, get_post
+from .models import User, Post, get_todays_recent_posts, get_post
 from flask import Flask, request, session, redirect, url_for, render_template, flash
 
 app = Flask(__name__)
+
 
 @app.route('/index')
 @app.route('/')
@@ -9,18 +10,21 @@ def index():
     posts = get_todays_recent_posts()
     return render_template('index.html', posts=posts)
 
+
 @app.route('/event')
 def event():
-    session['eventname']="General"
+    session['eventname'] = "General"
     flash(session['eventname'])
     return render_template('index.html')
 
+
 @app.route('/add-Snode')
 def add_Snode(post_id):
-    post=post_id
-    schema=request.form['schema']
-    target=request.form['target']
-    Post.add_Snode(post,schema,target)
+    post = post_id
+    schema = request.form['schema']
+    target = request.form['target']
+    Post.add_Snode(post, schema, target)
+
 
 @app.route('/posts/<post_id>')
 def post(post_id):
@@ -32,7 +36,8 @@ def post(post_id):
     opposed_posts = post.opposed
     return render_template('post.html', post=post)
 
-@app.route('/register', methods=['GET','POST'])
+
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
@@ -51,6 +56,7 @@ def register():
 
     return render_template('register.html')
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -67,17 +73,20 @@ def login():
 
     return render_template('login.html')
 
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
-    session.pop('eventname',None)
+    session.pop('eventname', None)
     flash('Logged out.')
     return redirect(url_for('index'))
 
+
 @app.route('/change_event', methods=['POST'])
 def change_event():
-    session["eventname"]=request.form['event']
+    session["eventname"] = request.form['event']
     return redirect(request.referrer)
+
 
 @app.route('/add_post', methods=['POST'])
 def add_post():
@@ -91,7 +100,7 @@ def add_post():
     return redirect(url_for('index'))
 
 #@app.route('/like_post/<post_id>')
-#def like_post(post_id):
+# def like_post(post_id):
 #    username = session.get('username')
 #
 #    if not username:
@@ -103,6 +112,7 @@ def add_post():
 #    flash('Liked post.')
 #    return redirect(request.referrer)
 
+
 @app.route('/agree_with_post/<post_id>')
 def agree_with_post(post_id):
     username = session.get('username')
@@ -113,8 +123,9 @@ def agree_with_post(post_id):
 
     User(username).agree_with_post(post_id, eventname)
 
-    flash('Agreed with post in event "'+ eventname + '"')
+    flash('Agreed with post in event "' + eventname + '"')
     return redirect(request.referrer)
+
 
 @app.route('/disagree_with_post/<post_id>')
 def disagree_with_post(post_id):
@@ -127,8 +138,9 @@ def disagree_with_post(post_id):
 
     User(username).disagree_with_post(post_id, eventname)
 
-    flash('Disagreed with post in event "'+ eventname + '"')
+    flash('Disagreed with post in event "' + eventname + '"')
     return redirect(request.referrer)
+
 
 @app.route('/undecided_on_post/<post_id>')
 def undecided_on_post(post_id):
@@ -140,8 +152,9 @@ def undecided_on_post(post_id):
 
     User(username).undecided_on_post(post_id, eventname)
 
-    flash('Undecided on post in event "'+ eventname + '"' )
+    flash('Undecided on post in event "' + eventname + '"')
     return redirect(request.referrer)
+
 
 @app.route('/profile/<username>')
 def profile(username):
