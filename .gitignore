@@ -5,3 +5,4 @@ instance/
 _site/
 .*.swp
 .*.swo
+venv
