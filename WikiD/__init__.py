@@ -1,4 +1,5 @@
 from .views import app
+from .db_connection import graph
 
 graphNodes = [("User", "username"),
               ("Tag", "name"),

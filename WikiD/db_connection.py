@@ -12,7 +12,8 @@ def DbConnection():
     authenticate(url.strip('http://'), username, password)
     return Graph(url + '/db/data/')
 
-
 def setGraph():
     graph = DbConnection()
-    global graph
+    return graph
+
+graph= setGraph()
