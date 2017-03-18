@@ -1,0 +1,31 @@
+{
+  "name": "fuzzy-dropdown",
+  "title": "fuzzy-dropdown",
+  "description": "Converts a select box into a fuzzy searchable dropdown.",
+  "keywords": [
+    "fuzzy",
+    "dropdown",
+    "select",
+    "approximate",
+    "string",
+    "search",
+    "match"
+  ],
+  "demo": "http://codepen.io/zeusdeux/pen/QbVxdq?editors=101",
+  "version": "1.0.0",
+  "author": {
+    "name": "Mudit Ameta",
+    "url": "https://mudit.xyz",
+  },
+  "licenses": [{
+    "type": "MIT",
+    "url": "https://github.com/zeusdeux/fuzzy-dropdown/blob/master/LICENSE"
+  }],
+  "bugs": "https://github.com/zeusdeux/fuzzy-dropdown/issues",
+  "homepage": "https://github.com/zeusdeux/fuzzy-dropdown",
+  "docs": "https://github.com/zeusdeux/fuzzy-dropdown",
+  "dependencies": {
+    "jquery": ">=1.8",
+    "subsequence-search": "~1.0.1"
+  }
+}

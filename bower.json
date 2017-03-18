@@ -1,0 +1,21 @@
+{
+  "name": "WikiD-heroku",
+  "homepage": "https://github.com/ozFri/WikiD-heroku",
+  "authors": [
+    "oz <ozfraier@gmail.com>"
+  ],
+  "description": "A system for discussion and decision making in large groups",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "react": "^15.4.2"
+  }
+}

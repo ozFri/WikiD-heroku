@@ -1,0 +1,140 @@
+{% extends "layout.html" %}
+{% block body %}
+  {% if session.username %}
+    <h3>Share New Post</h3>
+    <form action="{{ url_for('add_I_Node') }}" method="post">
+        <dl>
+            <dt>Title:</dt>
+            <dd><input type="text" size="30" name="title"></dd>
+<!--            <dt>Tags (separated by commas):</dt>
+            <dd><input type="text" size="30" name="tags"></dd>
+            <dt>Text:</dt>
+            <dd><textarea name="text" rows="5" cols="40"></textarea></dd>-->
+        </dl>
+        <input type="submit" value="Share">
+    </form>
+  {% endif %}
+<div class="post-header">
+<h2>
+{{inode.title}}
+</h2>
+{{inode.date}}
+</div>
+<p>
+    <div id="schemamenu-left">
+        <form method="Post" action="{{ url_for('add_S_node',inode_id=inode.id,inode_name=inode.title) }}">
+            <select name="source" id="fuzzOptionsList">
+                {% for row in inode.inodes %}
+                    <option value="{{loop.index}}">{{ row.inode.title }}</option> 
+                {% endfor %}
+            </select><!-- or <a href="">add</a> a new statement
+            <div id=""><input name="new-source" type="text"></div>-->
+			<div id="fuzzSearch">
+			  <div id="fuzzNameContainer">
+				<span class="fuzzName"></span>
+				<span class="fuzzArrow"></span>
+			  </div>
+			  <div id="fuzzDropdownContainer">
+				<input type="text" value="" class="fuzzMagicBox" placeholder="search.." />
+				<span class="fuzzSearchIcon"></span>
+				<ul id="fuzzResults">
+				</ul>
+			  </div>
+			</div>
+            <select name="schema">
+                <option>supports</option>
+                <option>opposes</option>
+            </select>
+            {{inode.title}}
+            <input type="submit" value="Submit">
+        </form>
+        <ul class="" >
+            <h3>Supporting propositions</h3>
+	    {% for row in supporting_inodes %}
+            <li>
+            <a class="inode-title" href="{{ url_for('inode', inode_id=row.inode.id)}}">{{ row.inode.title }}</a>
+        {% endfor %}        
+        </ul>
+        <ul class="" >
+            <h3>Opposing propositions</h3>
+	    {% for row in opposing_inodes %}
+            <li>
+            <a class="inode-title" href="{{ url_for('inode', inode_id=row.inode.id)}}">{{ row.inode.title }}</a>
+        {% endfor %}        
+        </ul>
+    </div>
+
+    <div id="schemamenu-right">
+        <form method="POST" action="{{ url_for('add_S_node',inode_id=inode.id,inode_name=inode.title) }}">
+            {{inode.title}}
+            <select name="schema">
+                <option>supports</option>
+                <option>opposes</option>
+            </select>
+			<div>
+				<select name="target" id="fuzzOptionsList2">
+					{% for row in inode.inodes %}
+						<option value="{{loop.index}}">{{ row.inode.title }}</option> 
+					{% endfor %}
+				</select>
+			</div><!-- or <a href="">add</a> a new statement
+            <div id=""><input name ="new-target" type="text"></div>-->
+			<div id="fuzzSearch2">
+			  <div id="fuzzNameContainer">
+				<span class="fuzzName"></span>
+				<span class="fuzzArrow"></span>
+			  </div>
+			  <div id="fuzzDropdownContainer">
+				<input type="text" value="" class="fuzzMagicBox" placeholder="search.." />
+				<span class="fuzzSearchIcon"></span>
+				<ul id="fuzzResults">
+				</ul>
+			  </div>
+			</div>
+            <input type="submit" value="Submit">
+        </form>
+        <ul class="" >
+            <h3>Supported propositions</h3>
+            {% for row in supported_inodes %}
+                <li>
+                    <a class="inode-title" href="{{ url_for('inode', inode_id=row.inode.id)}}">{{ row.inode.title }}</a>
+                </li>
+            {% endfor %}        
+        </ul>
+        <ul class="" >
+            <h3>Opposed propositions</h3>
+            {% for row in opposed_inodes %}
+                <li>
+                    <a class="inode-title" href="{{ url_for('inode', inode_id=row.inode.id)}}">{{ row.inode.title }}</a>
+                </li>
+            {% endfor %}        
+        </ul>
+    </div>
+    <div class="votemenu">
+        <h3>agreeing_with_this_statement: {{agree_votes}}</h3>
+    <a href="{{ url_for('agree_with_inode', inode_id=inode.id)}}">agree</a><br>
+        <h3>disagreeing_with_this_statement: {{disagree_votes}}</h3>
+    <a href="{{ url_for('disagree_with_inode', inode_id=inode.id) }}">disagree</a><br>
+        <h3>undecided_on_this_statement: {{undecided_votes}}</h3>
+    <a href="{{ url_for('undecided_on_inode', inode_id=inode.id) }}">undecided</a><br>
+    </div>
+</p>
+<script>
+$('#fuzzOptionsList').fuzzyDropdown({
+  mainContainer: '#fuzzSearch',
+  arrowUpClass: 'fuzzArrowUp',
+  selectedClass: 'selected',
+  enableBrowserDefaultScroll: true,
+  highlightClass: 'highlight'
+});
+$('#fuzzOptionsList2').fuzzyDropdown({
+  mainContainer: '#fuzzSearch2',
+  arrowUpClass: 'fuzzArrowUp',
+  selectedClass: 'selected',
+  enableBrowserDefaultScroll: true,
+  highlightClass: 'highlight'
+});
+</script>
+
+
+{% endblock %}

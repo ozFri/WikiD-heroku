@@ -1,12 +1,15 @@
 from .views import app
 from .db_connection import graph
 
+app.config.from_object('config')
+
 graphNodes = [("User", "username"),
               ("Tag", "name"),
               ("Post", "id"),
-              ("Inode", "id"),
-              ("Enode", "id"),
-              ("Snode", "id"),
+              ("INode", "id"),
+              ("ENode", "id"),
+              ("SNode", "id"),
+              ("SArc", "id"),
               ("Vote", "id")]
 
 

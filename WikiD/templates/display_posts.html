@@ -1,18 +1,18 @@
   <ul class="posts">
-  {% for row in posts %}
+  {% for row in inodes %}
     <li>
-        <b><a class="post-title" href="{{ url_for('post', post_id=row.post.id)}}">{{ row.post.title }}</a></b>
+        <b><a class="inode-title" href="{{ url_for('inode', inode_id=row.inode.id)}}">{{ row.inode.title }}</a></b>
         {% if request.path == "/" %}
     by <a href="{{ url_for('profile', username=row.username) }}">{{ row.username }}</a>
         {% endif %}
-    	on {{ row.post.date }}
+    	on {{ row.inode.date }}
         <div class="votemenu">
             <a href="#vote-menu{{loop.index}}">vote</a>
             <div id="vote-menu{{loop.index}}"><p><form action="{{ url_for('change_event') }}" method="post">
                     In event {{session.eventname}}<br> Change event to: <input type="text" name="event"></input><input type="submit" value="Submit"></form></p>
-                <a href="{{ url_for('agree_with_post', post_id=row.post.id) }}">agree</a><br>
-                <a href="{{ url_for('disagree_with_post', post_id=row.post.id) }}">disagree</a><br>
-                <a href="{{ url_for('undecided_on_post', post_id=row.post.id) }}">undecided</a><br>
+                <a href="{{ url_for('agree_with_inode', inode_id=row.inode.id) }}">agree</a><br>
+                <a href="{{ url_for('disagree_with_inode', inode_id=row.inode.id) }}">disagree</a><br>
+                <a href="{{ url_for('undecided_on_inode', inode_id=row.inode.id) }}">undecided</a><br>
             </div>
         </div>
   {% else %}

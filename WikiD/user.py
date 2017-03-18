@@ -31,16 +31,29 @@ class User:
         else:
             return False
 
-    def add_post(self, title):
+    def add_S_Node(self,schema):
+        user= self.find()
+        schemaNode= Node(
+                "SNode",
+                id=str(uuid.uuid4()),
+                schema=schema,
+                timestamp=timestamp(),
+                date=date()
+                )
+        authorship = Relationship(user, "PUBLISHED", schemaNode)
+        graph.create(authorship)
+        return schemaNode.properties["id"]
+
+    def add_I_Node(self, title):
         user = self.find()
-        post = Node(
-            "Post",
+        iNode = Node(
+            "INode",
             id=str(uuid.uuid4()),
             title=title,
             timestamp=timestamp(),
             date=date()
         )
-        rel = Relationship(user, "PUBLISHED", post)
+        rel = Relationship(user, "PUBLISHED", iNode)
         graph.create(rel)
 
 #        tags = [x.strip() for x in tags.lower().split(',')]
@@ -49,69 +62,69 @@ class User:
 #            rel = Relationship(tag, "TAGGED", post)
 #            graph.create(rel)
 
-    def votetozero(self, event, post):
-        oldvote = graph.match(start_node=event, rel_type=None, end_node=post)
+    def votetozero(self, event, iNode):
+        oldvote = graph.match(start_node=event, rel_type=None, end_node=iNode)
         if oldvote is not None:
             for rel in oldvote:
                 graph.delete(rel)
 
-    def agree_with_post(self, post_id, event_name):
+    def agree_with_inode(self, iNode_id, event_name):
         user = self.find()
-        post = graph.find_one("Post", "id", post_id)
+        iNode = graph.find_one("INode", "id", iNode_id)
         cypher_string_find_event = "MATCH (n:User {username:'" + user.properties[
-            "username"] + "'})-[r]->(:Enode {name:'" + event_name + "'})            RETURN count(n) "
+            "username"] + "'})-[r]->(:ENode {name:'" + event_name + "'})            RETURN count(n) "
         # check if user observes this event, and that it exists.
         if not graph.cypher.execute(cypher_string_find_event).one:
             event = create_new_event(user, event_name)
         else:
-            event = graph.find_one("Enode", "name", event_name)
-        self.votetozero(event, post)
+            event = graph.find_one("ENode", "name", event_name)
+        self.votetozero(event, iNode)
         graph.create_unique(
             Relationship(user, "IN_EVENT", event),
-            Relationship(event, "AGREES_WITH", post))
+            Relationship(event, "AGREES_WITH", iNode))
 
-    def disagree_with_post(self, post_id, event_name):
+    def disagree_with_inode(self, iNode_id, event_name):
         user = self.find()
-        post = graph.find_one("Post", "id", post_id)
+        iNode = graph.find_one("INode", "id", iNode_id)
         cypher_string = "MATCH (n:User {username:'" + user.properties[
-            "username"] + "'})-[r]->(:Enode {name:'" + event_name + "'})            RETURN count(n) "
+            "username"] + "'})-[r]->(:ENode {name:'" + event_name + "'})            RETURN count(n) "
         # check if user observes this event, and that it exists.
         if not graph.cypher.execute(cypher_string).one:
             event = create_new_event(user, event_name)
         else:
-            event = graph.find_one("Enode", "name", event_name)
-        self.votetozero(event, post)
+            event = graph.find_one("ENode", "name", event_name)
+        self.votetozero(event, iNode)
         graph.create_unique(
             Relationship(user, "IN_EVENT", event),
-            Relationship(event, "DISAGREES_WITH", post))
+            Relationship(event, "DISAGREES_WITH", iNode))
 
-    def undecided_on_post(self, post_id, event_name):
+    def undecided_on_inode(self, iNode_id, event_name):
         user = self.find()
-        post = graph.find_one("Post", "id", post_id)
+        iNode = graph.find_one("INode", "id", iNode_id)
         cypher_string = "MATCH (n:User {username:'" + user.properties[
-            "username"] + "'})-[r]->(:Enode {name:'" + event_name + "'})            RETURN count(n) "
+            "username"] + "'})-[r]->(:ENode {name:'" + event_name + "'})            RETURN count(n) "
         # check if user observes this event, and that it exists.
         if not graph.cypher.execute(cypher_string).one:
             event = create_new_event(user, event_name)
         else:
-            event = graph.find_one("Enode", "name", event_name)
-        self.votetozero(event, post)
+            event = graph.find_one("ENode", "name", event_name)
+        self.votetozero(event, iNode)
         graph.create_unique(
             Relationship(user, "IN_EVENT", event),
-            Relationship(event, "UNDECIDED_ON", post)
+            Relationship(event, "UNDECIDED_ON", iNode)
         )
 
-    def like_post(self, post_id):
+    def like_inode(self, iNode_id):
         user = self.find()
-        post = graph.find_one("Post", "id", post_id)
-        graph.create_unique(Relationship(user, "LIKED", post))
+        iNode = graph.find_one("INode", "id", iNode_id)
+        graph.create_unique(Relationship(user, "LIKED", iNode))
 
     def get_recent_posts(self):
         query = """
-        MATCH (user:User)-[:PUBLISHED]->(post:Post)
+        MATCH (user:User)-[:PUBLISHED]->(inode:INode)
         WHERE user.username = {username}
-        RETURN post
-        ORDER BY post.timestamp DESC LIMIT 500
+        RETURN inode
+        ORDER BY inode.timestamp DESC LIMIT 500
         """
 
         return graph.cypher.execute(query, username=self.username)
@@ -120,8 +133,8 @@ class User:
         # Find three users who are most similar to the logged-in user
         # based on tags they've both blogged about.
         query = """
-        MATCH (you:User)-[:PUBLISHED]->(:Post)<-[:TAGGED]-(tag:Tag),
-              (they:User)-[:PUBLISHED]->(:Post)<-[:TAGGED]-(tag)
+        MATCH (you:User)-[:PUBLISHED]->(:INode)<-[:TAGGED]-(tag:Tag),
+              (they:User)-[:PUBLISHED]->(:INode)<-[:TAGGED]-(tag)
         WHERE you.username = {username} AND you <> they
         WITH they, COLLECT(DISTINCT tag.name) AS tags, COUNT(DISTINCT tag) AS len
         ORDER BY len DESC LIMIT 3
@@ -136,9 +149,9 @@ class User:
         query = """
         MATCH (they:User {username: {they} })
         MATCH (you:User {username: {you} })
-        OPTIONAL MATCH (they)-[:LIKED]->(post:Post)<-[:PUBLISHED]-(you)
-        OPTIONAL MATCH (they)-[:PUBLISHED]->(:Post)<-[:TAGGED]-(tag:Tag),
-                       (you)-[:PUBLISHED]->(:Post)<-[:TAGGED]-(tag)
+        OPTIONAL MATCH (they)-[:LIKED]->(post:INode)<-[:PUBLISHED]-(you)
+        OPTIONAL MATCH (they)-[:PUBLISHED]->(:INode)<-[:TAGGED]-(tag:Tag),
+                       (you)-[:PUBLISHED]->(:INode)<-[:TAGGED]-(tag)
         RETURN COUNT(DISTINCT post) AS likes, COLLECT(DISTINCT tag.name) AS tags
         """
 

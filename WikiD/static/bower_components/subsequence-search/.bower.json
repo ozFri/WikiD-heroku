@@ -1,0 +1,40 @@
+{
+  "name": "subsequence-search",
+  "version": "1.0.1",
+  "homepage": "https://github.com/zeusdeux/subsequence-search",
+  "authors": [
+    "Mudit Ameta <zeusdeux@gmail.com>"
+  ],
+  "description": "Search for a given subsequence in a list of strings and transform the resulting list as required",
+  "main": "./build/subsequence-search.min.js",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "subsequence",
+    "search",
+    "fuzzy",
+    "string",
+    "transform",
+    "matching"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "1.0.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.0.1",
+    "commit": "a75545f45a27e87918c8eed7bd3a49b2470ae2c1"
+  },
+  "_source": "https://github.com/zeusdeux/subsequence-search.git",
+  "_target": "~1.0.1",
+  "_originalSource": "subsequence-search"
+}
