@@ -3,10 +3,10 @@
 
 <h2>Home</h2>
   {% if session.username %}
-    <h3>Share New Post</h3>
+    <h3>State your mind</h3>
     <form action="{{ url_for('add_I_Node') }}" method="post">
         <dl>
-            <dt>Title:</dt>
+            <dt>Statement:</dt>
             <dd><input type="text" size="30" name="title"></dd>
 <!--            <dt>Tags (separated by commas):</dt>
             <dd><input type="text" size="30" name="tags"></dd>
@@ -19,7 +19,7 @@
 
 <br>
 
-<h3>Today's Recent Posts</h3>
+<h3>Today's Recent Statements</h3>
 {% include "display_posts.html" %}
 
 {% endblock %}
