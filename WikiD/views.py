@@ -80,24 +80,26 @@ def init_rest_interface(cfg, flask_webapp):
 
         flask_webapp.f = f  # assign decorated function
 
-@app.route('/<inode_id>/add-Snode/<inode_name>', methods=['GET', 'POST'])
-def add_S_node(inode_id,inode_name):
-    inode=inode_name
+@app.route('/<inode_id>/add-Snode', methods=['POST','GET'])
+def add_S_node(inode_id):
+    inode = INode(inode_id)
+    inodes = inode.inodes
     #the type of the schema
     schema = request.form['schema']
     #the title of the target node 
-    target = request.form.get('target',None)
+    targetIndex = request.form.get('target',None)
     #the title of the source node
-    source = request.form.get('source',None)
-    newTarget = request.form.getlist('new-target',None)
-    newSource = request.form.getlist('new-source',None)
-    schemaID=User(session['username']).add_S_Node(schema)
-    if target is not None:
-        target = request.form['target']
-        source = inode
-    elif source is not None:    
-        source = request.form['source']
-        target = inode
+    sourceIndex = request.form.get('source',None)
+    #newTarget = request.form.getlist('new-target',None)
+    #newSource = request.form.getlist('new-source',None)
+    schemaID = None
+    schemaID = User(session['username']).add_S_Node(schema)
+    if targetIndex is not None:
+        target = inodes[int(targetIndex)].inode['title']
+        source = inode.title
+    elif sourceIndex is not None:    
+        source = inodes[int(sourceIndex)].inode['title']
+        target = inode.title
     #elif newTarget is not None:    
     #    User(session['username']).add_I_Node(newTarget)
     #    target = newTarget = request.form['new-target']
@@ -106,7 +108,7 @@ def add_S_node(inode_id,inode_name):
     #    User(session['username']).add_I_Node(newSource)
     #    source = newSource = request.form['new-source']
     #    target = inode
-    if (target or source or newTarget or newSource) is not None:
+    if (target and source and schemaID) is not None:
         create_new_schema_relationship(source,schemaID,target)  
     return redirect(request.referrer)
 

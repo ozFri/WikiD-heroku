@@ -22,25 +22,24 @@
 </div>
 <p>
     <div id="schemamenu-left">
-        <form method="Post" action="{{ url_for('add_S_node',inode_id=inode.id,inode_name=inode.title) }}">
-            <select name="source" id="fuzzOptionsList">
+        <form method="Post" action="{{ url_for('add_S_node',inode_id=inode.id) }}">
+            <select id="fuzzDrop1" name="source">
                 {% for row in inode.inodes %}
-                    <option value="{{loop.index}}">{{ row.inode.title }}</option> 
+                <option value={{ loop.index }}>{{ row.inode.title }}</option> 
                 {% endfor %}
-            </select><!-- or <a href="">add</a> a new statement
-            <div id=""><input name="new-source" type="text"></div>-->
-			<div id="fuzzSearch">
-			  <div id="fuzzNameContainer">
-				<span class="fuzzName"></span>
-				<span class="fuzzArrow"></span>
-			  </div>
-			  <div id="fuzzDropdownContainer">
-				<input type="text" value="" class="fuzzMagicBox" placeholder="search.." />
-				<span class="fuzzSearchIcon"></span>
-				<ul id="fuzzResults">
-				</ul>
-			  </div>
-			</div>
+            </select>
+            <div id="fuzzSearch">
+              <div id="fuzzNameContainer">
+              <span class="fuzzName"></span>
+              <span class="fuzzArrow"></span>
+              </div>
+              <div id="fuzzDropdownContainer">
+              <input type="text" value="" class="fuzzMagicBox" placeholder="search.." />
+              <span class="fuzzSearchIcon"></span>
+              <ul id="fuzzResults">
+              </ul>
+              </div>
+            </div>
             <select name="schema">
                 <option>supports</option>
                 <option>opposes</option>
@@ -65,16 +64,16 @@
     </div>
 
     <div id="schemamenu-right">
-        <form method="POST" action="{{ url_for('add_S_node',inode_id=inode.id,inode_name=inode.title) }}">
+        <form method="POST" action="{{ url_for('add_S_node',inode_id=inode.id) }}">
             {{inode.title}}
             <select name="schema">
                 <option>supports</option>
                 <option>opposes</option>
             </select>
 			<div>
-				<select name="target" id="fuzzOptionsList2">
+				<select name="target" id="fuzzDrop2">
 					{% for row in inode.inodes %}
-						<option value="{{loop.index}}">{{ row.inode.title }}</option> 
+          <option value={{loop.index}}>{{ row.inode.title }}</option> 
 					{% endfor %}
 				</select>
 			</div><!-- or <a href="">add</a> a new statement
@@ -120,14 +119,14 @@
     </div>
 </p>
 <script>
-$('#fuzzOptionsList').fuzzyDropdown({
+$('#fuzzDrop1').fuzzyDropdown({
   mainContainer: '#fuzzSearch',
   arrowUpClass: 'fuzzArrowUp',
   selectedClass: 'selected',
   enableBrowserDefaultScroll: true,
   highlightClass: 'highlight'
 });
-$('#fuzzOptionsList2').fuzzyDropdown({
+$('#fuzzDrop2').fuzzyDropdown({
   mainContainer: '#fuzzSearch2',
   arrowUpClass: 'fuzzArrowUp',
   selectedClass: 'selected',

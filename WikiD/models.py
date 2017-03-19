@@ -80,7 +80,7 @@ class INode:
         query = """
         MATCH (inode)-[:SArc]->(snode:SNode{schema:"supports"})-[:SArc]->({title:""" + '"' + self.title + '"' + """ })
         RETURN DISTINCT inode
-        ORDER BY inode.timestamp DESC LIMIT 5
+        ORDER BY inode.timestamp DESC LIMIT 500
         """
         return graph.cypher.execute(query)
 
@@ -88,7 +88,7 @@ class INode:
         query = """
         MATCH (inode)-[:SArc]->(snode:SNode{schema:"opposes"})-[:SArc]->({title:""" + '"' + self.title + '"' + """ })
         RETURN DISTINCT inode,snode
-        ORDER BY inode.timestamp DESC LIMIT 5
+        ORDER BY inode.timestamp DESC LIMIT 500
         """
         return graph.cypher.execute(query)
 
@@ -96,7 +96,7 @@ class INode:
         query = """
         MATCH (inode)<-[:SArc]-(snode:SNode{schema:"supports"})<-[:SArc]-({title:""" + '"' + self.title + '"' + """ })
         RETURN DISTINCT inode
-        ORDER BY inode.timestamp DESC LIMIT 5
+        ORDER BY inode.timestamp DESC LIMIT 500
         """
         return graph.cypher.execute(query)
 
@@ -104,7 +104,7 @@ class INode:
         query = """
         MATCH (inode)<-[:SArc]-(snode:SNode{schema:"opposes"})<-[:SArc]-({title:""" + '"' + self.title + '"' + """ })
         RETURN DISTINCT inode,snode
-        ORDER BY inode.timestamp DESC LIMIT 5
+        ORDER BY inode.timestamp DESC LIMIT 500
         """
         return graph.cypher.execute(query)
 
