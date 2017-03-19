@@ -95,10 +95,10 @@ def add_S_node(inode_id):
     schemaID = None
     schemaID = User(session['username']).add_S_Node(schema)
     if targetIndex is not None:
-        target = inodes[int(targetIndex)].inode['title']
+        target = inodes[int(targetIndex)-1].inode['title']
         source = inode.title
     elif sourceIndex is not None:    
-        source = inodes[int(sourceIndex)].inode['title']
+        source = inodes[int(sourceIndex)-1].inode['title']
         target = inode.title
     #elif newTarget is not None:    
     #    User(session['username']).add_I_Node(newTarget)
