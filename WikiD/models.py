@@ -33,14 +33,13 @@ def get_iNode_by_title(inode_title):
 def get_sNode(snode_id):
     return graph.find_one("SNode", "id", snode_id)
 
-def get_todays_recent_posts():
+def get_forevers_recent_posts():
     query = """
     MATCH (user:User)-[:PUBLISHED]->(inode:INode)
-    WHERE inode.date = {today}
     RETURN user.username AS username, inode
-    ORDER BY inode.timestamp DESC LIMIT 5
+    ORDER BY inode.timestamp DESC LIMIT 5000
     """
-    return graph.cypher.execute(query, today=date())
+    return graph.cypher.execute(query) 
 
 def timestamp():
     epoch = datetime.utcfromtimestamp(0)

@@ -1,4 +1,4 @@
-from .models import INode, get_todays_recent_posts, get_iNode, create_new_schema_relationship
+from .models import INode, get_forevers_recent_posts, get_iNode, create_new_schema_relationship
 from flask import Flask, request, session, redirect, url_for, render_template, flash
 from .user import User
 
@@ -8,7 +8,7 @@ app = Flask(__name__)
 @app.route('/index')
 @app.route('/')
 def index():
-    inodes = get_todays_recent_posts()
+    inodes = get_forevers_recent_posts()
     return render_template('index.html', inodes=inodes)
 
 def init_rest_interface(cfg, flask_webapp):
