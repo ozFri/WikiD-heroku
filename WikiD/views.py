@@ -139,7 +139,7 @@ def register():
         if User.register_validation(flash, username, password):
             session['username'] = username
             flash('Logged in.')
-            return redirect(url_for('index'))
+            return redirect(url_for('event'))
 
     return render_template('register.html')
 
@@ -155,7 +155,7 @@ def login():
             session['username'] = username
             session['eventname'] = "General"
             flash('Logged in.')
-            return redirect(url_for('event'))
+            return redirect(url_for('index'))
 
     return render_template('login.html')
 
