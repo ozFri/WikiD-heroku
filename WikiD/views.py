@@ -120,6 +120,10 @@ def event():
 
 @app.route('/inodes/<inode_id>')
 def inode(inode_id):
+    username = session.get('username')
+    if not username:
+        flash('You must be logged in to access this page')
+        return redirect(url_for('login'))
     inode = INode(inode_id)
     inodes = inode.inodes
     agree_votes = inode.agreeing

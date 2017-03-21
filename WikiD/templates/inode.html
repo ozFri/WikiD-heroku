@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
   {% if session.username %}
-    <h3>Share New Post</h3>
+    <h3>Add a Statement</h3>
     <form action="{{ url_for('add_I_Node') }}" method="post">
         <dl>
             <dt>Title:</dt>
@@ -23,7 +23,7 @@
 <p>
     <div id="schemamenu-left">
         <form method="Post" action="{{ url_for('add_S_node',inode_id=inode.id) }}">
-            <select id="fuzzDrop1" name="source">
+            <select name="source" id="fuzzDrop1">
                 {% for row in inode.inodes %}
                 <option value={{ loop.index }}>{{ row.inode.title }}</option> 
                 {% endfor %}
@@ -40,12 +40,12 @@
               </ul>
               </div>
             </div>
-            <select name="schema">
+            <select name="schema" class="schema-select">
                 <option>supports</option>
                 <option>opposes</option>
             </select>
             {{inode.title}}
-            <input type="submit" value="Submit">
+            <input type="submit" class="SNode-submit" value="Submit">
         </form>
         <ul class="" >
             <h3>Supporting propositions</h3>
@@ -66,7 +66,7 @@
     <div id="schemamenu-right">
         <form method="POST" action="{{ url_for('add_S_node',inode_id=inode.id) }}">
             {{inode.title}}
-            <select name="schema">
+            <select name="schema" class="schema-select">
                 <option>supports</option>
                 <option>opposes</option>
             </select>
@@ -90,7 +90,7 @@
 				</ul>
 			  </div>
 			</div>
-            <input type="submit" value="Submit">
+            <input type="submit" value="Submit"class="SNode-submit">
         </form>
         <ul class="" >
             <h3>Supported propositions</h3>
