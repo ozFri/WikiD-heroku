@@ -19,8 +19,8 @@ def create_new_event(user, event_name="General"):
     return event
 
 def create_new_schema_relationship(source, schemaID, target):
-    sourceNode=get_iNode_by_title(source)
-    targetNode=get_iNode_by_title(target)
+    sourceNode=get_aifNode_by_title(source)
+    targetNode=get_aifNode_by_title(target)
     schemaNode=get_sNode(schemaID)
     graph.create(Relationship(sourceNode,"SArc",schemaNode))
     graph.create(Relationship(schemaNode,"SArc",targetNode))
@@ -31,8 +31,11 @@ def get_aifNode(inode_id):
         ret = graph.find_one("SNode", "id", inode_id)
     return ret
 
-def get_iNode_by_title(inode_title):
-    return graph.find_one("INode", "title", inode_title)
+def get_aifNode_by_title(aifnode_title):
+    ret = graph.find_one("INode", "title", aifnode_title)
+    if not ret:
+        ret = graph.find_one("SNode", "title", aifnode_title)
+    return ret
 def get_sNode(snode_id):
     return graph.find_one("SNode", "id", snode_id)
 
@@ -59,10 +62,10 @@ class AIFNode:
         self.aifnode = get_aifNode(aifNodeID)
         self.aifnodes = get_aifNodes()
         self.type = self.aifnode.labels
-        if self.type == "SNode":
+        if "SNode" in self.type :
             self.schema = self.aifnode.properties["schema"]
-            self.source = self.aifnode.properties["source"]
-            self.target = self.aifnode.properties["target"]
+            self.source = get_aifNode_by_title(self.aifnode.properties["source"])
+            self.target = get_aifNode_by_title(self.aifnode.properties["target"])
         self.title = self.aifnode.properties["title"]
         self.supporting = self.get_neighbours("supporting")
         self.opposing = self.get_neighbours("opposing")
@@ -81,10 +84,11 @@ class AIFNode:
                  }
         query = """
         MATCH (aifnode)"""+reltype[inference][1]+"""(snode:SNode{schema:"""+'"'+reltype[inference][0]+'"'+"""})"""+reltype[inference][1]+"""({id:""" + '"' + self.id + '"' + """ })
-        RETURN DISTINCT aifnode
-        ORDER BY aifnode.timestamp DESC LIMIT 500
+        RETURN DISTINCT snode
+        ORDER BY snode.timestamp DESC LIMIT 500
         """
-        return graph.cypher.execute(query)
+        results = graph.cypher.execute(query)
+        return [AIFNode(row.snode.properties["id"]) for row in results]
 
     def user_vote(self):
         query = """

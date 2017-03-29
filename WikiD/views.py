@@ -129,12 +129,12 @@ def aifNode(aifnode_id):
     agree_votes = aifnode.agreeing
     disagree_votes = aifnode.disagreeing
     undecided_votes = aifnode.undecided
-    supporting_aifnodes = aifnode.supporting
-    opposing_aifnodes = aifnode.opposing
-    supported_aifnodes = aifnode.supported
-    opposed_aifnodes = aifnode.opposed
+    supporting_nodes = aifnode.supporting
+    opposing_nodes = aifnode.opposing
+    supported_nodes = aifnode.supported
+    opposed_nodes = aifnode.opposed
     user_vote = aifnode.user_vote
-    return render_template('aifnode.html', aifnode=aifnode,supporting_aifnodes=supporting_aifnodes,supported_aifnodes=supported_aifnodes,opposing_aifnodes=opposing_aifnodes,opposed_aifnodes=opposed_aifnodes,agree_votes=agree_votes,disagree_votes=disagree_votes,undecided_votes=undecided_votes,user_vote=user_vote)
+    return render_template('aifnode.html', aifnode=aifnode,supporting_nodes=supporting_nodes,supported_nodes=supported_nodes,opposing_nodes=opposing_nodes,opposed_nodes=opposed_nodes,agree_votes=agree_votes,disagree_votes=disagree_votes,undecided_votes=undecided_votes,user_vote=user_vote)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
