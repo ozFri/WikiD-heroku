@@ -25,19 +25,22 @@ def create_new_schema_relationship(source, schemaID, target):
     graph.create(Relationship(sourceNode,"SArc",schemaNode))
     graph.create(Relationship(schemaNode,"SArc",targetNode))
 
-def get_iNode(inode_id):
-    return graph.find_one("INode", "id", inode_id)
+def get_aifNode(inode_id):
+    ret = graph.find_one("INode", "id", inode_id)
+    if not ret:
+        ret = graph.find_one("SNode", "id", inode_id)
+    return ret
 
 def get_iNode_by_title(inode_title):
     return graph.find_one("INode", "title", inode_title)
 def get_sNode(snode_id):
     return graph.find_one("SNode", "id", snode_id)
 
-def get_forevers_recent_posts():
-    query = """
-    MATCH (user:User)-[:PUBLISHED]->(inode:INode)
-    RETURN user.username AS username, inode
-    ORDER BY inode.timestamp DESC LIMIT 5000
+def get_aifNodes():
+    query= """
+    MATCH (user:User)-[:PUBLISHED]->(aifnode)
+    RETURN user.username AS username, aifnode
+    ORDER BY aifnode.timestamp DESC LIMIT 5000
     """
     return graph.cypher.execute(query) 
 
@@ -50,74 +53,49 @@ def timestamp():
 def date():
     return datetime.now().strftime('%F')
 
-class INode:
-
-    def __init__(self, iNodeId):
-        self.id = iNodeId
-        self.node = get_iNode(iNodeId)
-        self.inodes = self.get_iNodes()
-        self.title = self.node.properties["title"]
-        self.supporting = self.get_supporting()
-        self.opposing = self.get_opposing()
-        self.supported = self.get_supported()
-        self.opposed = self.get_opposed()
+class AIFNode:
+    def __init__(self, aifNodeID):
+        self.id = aifNodeID
+        self.aifnode = get_aifNode(aifNodeID)
+        self.aifnodes = get_aifNodes()
+        self.type = self.aifnode.labels
+        if self.type == "SNode":
+            self.schema = self.aifnode.properties["schema"]
+            self.source = self.aifnode.properties["source"]
+            self.target = self.aifnode.properties["target"]
+        self.title = self.aifnode.properties["title"]
+        self.supporting = self.get_neighbours("supporting")
+        self.opposing = self.get_neighbours("opposing")
+        self.supported = self.get_neighbours("supported")
+        self.opposed = self.get_neighbours("opposed")
         self.agreeing = self.get_votes("AGREES_WITH")
         self.disagreeing = self.get_votes("DISAGREES_WITH")
         self.undecided = self.get_votes("UNDECIDED_ON")
         self.user_vote = self.user_vote()
 
-    def get_iNodes(self):
+    def get_neighbours(self,inference):
+        reltype={"supporting": ("supports","-[:SArc]->"),
+                 "supported" : ("supports","<-[:SArc]-"),
+                 "opposing"  : ("opposes","-[:SArc]->"),
+                 "opposed"   : ("opposses","<-[:SArc]-")
+                 }
         query = """
-        MATCH (user:User)-[:PUBLISHED]->(inode:INode)
-        RETURN user.username AS username, inode
-        ORDER BY inode.timestamp DESC LIMIT 5000
-        """
-
-        return graph.cypher.execute(query)
-
-    def get_supporting(self):
-        query = """
-        MATCH (inode)-[:SArc]->(snode:SNode{schema:"supports"})-[:SArc]->({title:""" + '"' + self.title + '"' + """ })
-        RETURN DISTINCT inode
-        ORDER BY inode.timestamp DESC LIMIT 500
+        MATCH (aifnode)"""+reltype[inference][1]+"""(snode:SNode{schema:"""+'"'+reltype[inference][0]+'"'+"""})"""+reltype[inference][1]+"""({id:""" + '"' + self.id + '"' + """ })
+        RETURN DISTINCT aifnode
+        ORDER BY aifnode.timestamp DESC LIMIT 500
         """
         return graph.cypher.execute(query)
-
-    def get_opposing(self):
-        query = """
-        MATCH (inode)-[:SArc]->(snode:SNode{schema:"opposes"})-[:SArc]->({title:""" + '"' + self.title + '"' + """ })
-        RETURN DISTINCT inode,snode
-        ORDER BY inode.timestamp DESC LIMIT 500
-        """
-        return graph.cypher.execute(query)
-
-    def get_supported(self):
-        query = """
-        MATCH (inode)<-[:SArc]-(snode:SNode{schema:"supports"})<-[:SArc]-({title:""" + '"' + self.title + '"' + """ })
-        RETURN DISTINCT inode
-        ORDER BY inode.timestamp DESC LIMIT 500
-        """
-        return graph.cypher.execute(query)
-
-    def get_opposed(self):
-        query = """
-        MATCH (inode)<-[:SArc]-(snode:SNode{schema:"opposes"})<-[:SArc]-({title:""" + '"' + self.title + '"' + """ })
-        RETURN DISTINCT inode,snode
-        ORDER BY inode.timestamp DESC LIMIT 500
-        """
-        return graph.cypher.execute(query)
-
 
     def user_vote(self):
         query = """
-        MATCH (User{username:"""+'"'+session["username"]+'"'+"""})-[OBSERVES]->(ENode{name:"""+'"'+session["eventname"]+'"'+"""})-[vote]->(INode{title:"""+'"'+self.title+'"'+"""})
+        MATCH (User{username:"""+'"'+session["username"]+'"'+"""})-[OBSERVES]->(ENode{name:"""+'"'+session["eventname"]+'"'+"""})-[vote]->(SNode{title:"""+'"'+self.title+'"'+"""})
         RETURN vote
         """
         return graph.cypher.execute(query)
 
     def get_votes(self,vote_type):
         query = """
-        MATCH (User)-[OBSERVES]->(ENode{name:"""+'"'+session["eventname"]+'"'+"""})-[vote:"""+vote_type+"""]->(INode{title:"""+'"'+self.title+'"'+"""})
+        MATCH (User)-[OBSERVES]->(ENode{name:"""+'"'+session["eventname"]+'"'+"""})-[vote:"""+vote_type+"""]->(SNode{title:"""+'"'+self.title+'"'+"""})
         RETURN count(DISTINCT vote) as votes
         """
         return graph.cypher.execute(query).one

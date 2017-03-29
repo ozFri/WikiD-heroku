@@ -31,12 +31,15 @@ class User:
         else:
             return False
 
-    def add_S_Node(self,schema):
+    def add_S_Node(self,schema,source,target):
         user= self.find()
         schemaNode= Node(
                 "SNode",
                 id=str(uuid.uuid4()),
                 schema=schema,
+                source=source,
+                target=target,
+                title=source+" "+schema+" "+target,
                 timestamp=timestamp(),
                 date=date()
                 )
@@ -68,7 +71,7 @@ class User:
             for rel in oldvote:
                 graph.delete(rel)
 
-    def agree_with_inode(self, iNode_id, event_name):
+    def agree_with_aifnode(self, iNode_id, event_name):
         user = self.find()
         iNode = graph.find_one("INode", "id", iNode_id)
         cypher_string_find_event = "MATCH (n:User {username:'" + user.properties[
@@ -83,7 +86,7 @@ class User:
             Relationship(user, "IN_EVENT", event),
             Relationship(event, "AGREES_WITH", iNode))
 
-    def disagree_with_inode(self, iNode_id, event_name):
+    def disagree_with_aifnode(self, iNode_id, event_name):
         user = self.find()
         iNode = graph.find_one("INode", "id", iNode_id)
         cypher_string = "MATCH (n:User {username:'" + user.properties[
@@ -98,7 +101,7 @@ class User:
             Relationship(user, "IN_EVENT", event),
             Relationship(event, "DISAGREES_WITH", iNode))
 
-    def undecided_on_inode(self, iNode_id, event_name):
+    def undecided_on_aifnode(self, iNode_id, event_name):
         user = self.find()
         iNode = graph.find_one("INode", "id", iNode_id)
         cypher_string = "MATCH (n:User {username:'" + user.properties[
@@ -114,17 +117,17 @@ class User:
             Relationship(event, "UNDECIDED_ON", iNode)
         )
 
-    def like_inode(self, iNode_id):
+    def like_aifnode(self, iNode_id):
         user = self.find()
         iNode = graph.find_one("INode", "id", iNode_id)
         graph.create_unique(Relationship(user, "LIKED", iNode))
 
     def get_recent_posts(self):
         query = """
-        MATCH (user:User)-[:PUBLISHED]->(inode:INode)
+        MATCH (user:User)-[:PUBLISHED]->(aifnode)
         WHERE user.username = {username}
-        RETURN inode
-        ORDER BY inode.timestamp DESC LIMIT 500
+        RETURN aifnode
+        ORDER BY aifnode.timestamp DESC LIMIT 500
         """
 
         return graph.cypher.execute(query, username=self.username)

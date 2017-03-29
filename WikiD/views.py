@@ -1,4 +1,4 @@
-from .models import INode, get_forevers_recent_posts, get_iNode, create_new_schema_relationship
+from .models import AIFNode, get_aifNodes, get_aifNode, create_new_schema_relationship
 from flask import Flask, request, session, redirect, url_for, render_template, flash
 from .user import User
 
@@ -8,8 +8,8 @@ app = Flask(__name__)
 @app.route('/index')
 @app.route('/')
 def index():
-    inodes = get_forevers_recent_posts()
-    return render_template('index.html', inodes=inodes)
+    aifNodes = get_aifNodes()
+    return render_template('index.html', aifnodes=aifNodes)
 
 def init_rest_interface(cfg, flask_webapp):
     """
@@ -80,10 +80,10 @@ def init_rest_interface(cfg, flask_webapp):
 
         flask_webapp.f = f  # assign decorated function
 
-@app.route('/<inode_id>/add-Snode', methods=['POST','GET'])
-def add_S_node(inode_id):
-    inode = INode(inode_id)
-    inodes = inode.inodes
+@app.route('/<aifnode_id>/add-Snode', methods=['POST','GET'])
+def add_S_node(aifnode_id):
+    aifnode = AIFNode(aifnode_id)
+    aifnodes = get_aifNodes()
     #the type of the schema
     schema = request.form['schema']
     #the title of the target node 
@@ -93,21 +93,21 @@ def add_S_node(inode_id):
     #newTarget = request.form.getlist('new-target',None)
     #newSource = request.form.getlist('new-source',None)
     schemaID = None
-    schemaID = User(session['username']).add_S_Node(schema)
     if targetIndex is not None:
-        target = inodes[int(targetIndex)-1].inode['title']
-        source = inode.title
+        target = aifnodes[int(targetIndex)-1].aifnode['title']
+        source = aifnode.title
     elif sourceIndex is not None:    
-        source = inodes[int(sourceIndex)-1].inode['title']
-        target = inode.title
+        source = aifnodes[int(sourceIndex)-1].aifnode['title']
+        target = aifnode.title
     #elif newTarget is not None:    
     #    User(session['username']).add_I_Node(newTarget)
     #    target = newTarget = request.form['new-target']
-    #    source = inode
+    #    source = aifnode
     #elif newSource is not None:    
     #    User(session['username']).add_I_Node(newSource)
     #    source = newSource = request.form['new-source']
-    #    target = inode
+    #    target = aifnode
+    schemaID = User(session['username']).add_S_Node(schema,source,target)
     if (target and source and schemaID) is not None:
         create_new_schema_relationship(source,schemaID,target)  
     return redirect(request.referrer)
@@ -118,23 +118,23 @@ def event():
     flash(session['eventname'])
     return render_template('index.html')
 
-@app.route('/inodes/<inode_id>')
-def inode(inode_id):
+@app.route('/aifnodes/<aifnode_id>')
+def aifNode(aifnode_id):
     username = session.get('username')
     if not username:
         flash('You must be logged in to access this page')
         return redirect(url_for('login'))
-    inode = INode(inode_id)
-    inodes = inode.inodes
-    agree_votes = inode.agreeing
-    disagree_votes = inode.disagreeing
-    undecided_votes = inode.undecided
-    supporting_inodes = inode.supporting
-    opposing_inodes = inode.opposing
-    supported_inodes = inode.supported
-    opposed_inodes = inode.opposed
-    user_vote = inode.user_vote
-    return render_template('inode.html', inode=inode,supporting_inodes=supporting_inodes,supported_inodes=supported_inodes,opposing_inodes=opposing_inodes,opposed_inodes=opposed_inodes,agree_votes=agree_votes,disagree_votes=disagree_votes,undecided_votes=undecided_votes,user_vote=user_vote)
+    aifnode = AIFNode(aifnode_id)
+    aifnodes = aifnode.aifnodes
+    agree_votes = aifnode.agreeing
+    disagree_votes = aifnode.disagreeing
+    undecided_votes = aifnode.undecided
+    supporting_aifnodes = aifnode.supporting
+    opposing_aifnodes = aifnode.opposing
+    supported_aifnodes = aifnode.supported
+    opposed_aifnodes = aifnode.opposed
+    user_vote = aifnode.user_vote
+    return render_template('aifnode.html', aifnode=aifnode,supporting_aifnodes=supporting_aifnodes,supported_aifnodes=supported_aifnodes,opposing_aifnodes=opposing_aifnodes,opposed_aifnodes=opposed_aifnodes,agree_votes=agree_votes,disagree_votes=disagree_votes,undecided_votes=undecided_votes,user_vote=user_vote)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -188,21 +188,21 @@ def add_I_Node():
 
     return redirect(request.referrer)
 
-@app.route('/agree_with_inode/<inode_id>')
-def agree_with_inode(inode_id):
+@app.route('/agree_with_aifnode/<aifnode_id>')
+def agree_with_aifnode(aifnode_id):
     username = session.get('username')
     eventname = session.get('eventname')
     if not username:
         flash('You must be logged in to agree with a post.')
         return redirect(url_for('login'))
 
-    User(username).agree_with_inode(inode_id, eventname)
+    User(username).agree_with_aifnode(aifnode_id, eventname)
 
     flash('Agreed with inode in event "' + eventname + '"')
     return redirect(request.referrer)
 
-@app.route('/disagree_with_inode/<inode_id>')
-def disagree_with_inode(inode_id):
+@app.route('/disagree_with_aifnode/<aifnode_id>')
+def disagree_with_aifnode(aifnode_id):
     username = session.get('username')
     eventname = session.get('eventname')
 
@@ -210,20 +210,20 @@ def disagree_with_inode(inode_id):
         flash('You must be logged in to disagree with a post.')
         return redirect(url_for('login'))
 
-    User(username).disagree_with_inode(inode_id, eventname)
+    User(username).disagree_with_aifnode(aifnode_id, eventname)
 
-    flash('Disagreed with inode in event "' + eventname + '"')
+    flash('Disagreed with aifnode in event "' + eventname + '"')
     return redirect(request.referrer)
 
-@app.route('/undecided_on_inode/<inode_id>')
-def undecided_on_inode(inode_id):
+@app.route('/undecided_on_aifnode/<aifnode_id>')
+def undecided_on_aifnode(aifnode_id):
     username = session.get('username')
     eventname = session.get('eventname')
     if not username:
         flash('You must be logged in to follow a post.')
         return redirect(url_for('login'))
 
-    User(username).undecided_on_inode(inode_id, eventname)
+    User(username).undecided_on_aifnode(aifnode_id, eventname)
 
     flash('Undecided on post in event "' + eventname + '"')
     return redirect(request.referrer)
@@ -234,7 +234,7 @@ def profile(username):
     user_being_viewed_username = username
 
     user_being_viewed = User(user_being_viewed_username)
-    inodes = user_being_viewed.get_recent_posts()
+    aifnodes = user_being_viewed.get_recent_posts()
 
     similar = []
     common = []
@@ -250,7 +250,7 @@ def profile(username):
     return render_template(
         'profile.html',
         username=username,
-        inodes=inodes,
+        aifnodes=aifnodes,
         similar=similar,
         common=common
     )

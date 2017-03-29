@@ -16,16 +16,16 @@
 {% endif %}
 <div class="post-header">
     <h2>
-        {{inode.title}}
+        {{aifnode.title}}
     </h2>
-    {{inode.date}}
+    {{aifnode.date}}
 </div>
 <p>
 <div id="schemamenu-left">
-    <form method="Post" action="{{ url_for('add_S_node',inode_id=inode.id) }}">
+    <form method="Post" action="{{ url_for('add_S_node',aifnode_id=aifnode.id) }}">
         <select name="source" id="fuzzDrop1">
-            {% for row in inode.inodes %}
-            <option value={{ loop.index }}>{{ row.inode.title }}</option> 
+            {% for row in aifnode.aifnodes %}
+            <option value={{ loop.index }}>{{ row.aifnode.title }}</option> 
             {% endfor %}
         </select>
         <div id="fuzzSearch">
@@ -44,36 +44,36 @@
             <option>supports</option>
             <option>opposes</option>
         </select>
-        {{inode.title}}
+        {{aifnode.title}}
         <input type="submit" class="SNode-submit" value="Submit">
     </form>
     <ul class="" >
         <h3>Supporting propositions</h3>
-        {% for row in supporting_inodes %}
+        {% for row in supporting_aifnodes %}
         <li>
-            <a class="inode-title" href="{{ url_for('inode', inode_id=row.inode.id)}}">{{ row.inode.title }}</a></li>
+            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.aifnode.id)}}">{{ row.aifnode.title }}</a></li>
             {% endfor %}        
     </ul>
     <ul class="" >
         <h3>Opposing propositions</h3>
-        {% for row in opposing_inodes %}
+        {% for row in opposing_aifnodes %}
         <li>
-            <a class="inode-title" href="{{ url_for('inode', inode_id=row.inode.id)}}">{{ row.inode.title }}</a></li>
+            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.aifnode.id)}}">{{ row.aifnode.title }}</a></li>
             {% endfor %}        
     </ul>
 </div>
 
 <div id="schemamenu-right">
-    <form method="POST" action="{{ url_for('add_S_node',inode_id=inode.id) }}">
-        {{inode.title}}
+    <form method="POST" action="{{ url_for('add_S_node',aifnode_id=aifnode.id) }}">
+        {{aifnode.title}}
         <select name="schema" class="schema-select">
             <option>supports</option>
             <option>opposes</option>
         </select>
         <div>
             <select name="target" id="fuzzDrop2">
-                {% for row in inode.inodes %}
-                <option value={{loop.index}}>{{ row.inode.title }}</option> 
+                {% for row in aifnode.aifnodes %}
+                <option value={{loop.index}}>{{ row.aifnode.title }}</option> 
                 {% endfor %}
             </select>
         </div><!-- or <a href="">add</a> a new statement
@@ -94,28 +94,28 @@
     </form>
     <ul class="" >
         <h3>Supported propositions</h3>
-        {% for row in supported_inodes %}
+        {% for row in supported_aifnodes %}
         <li>
-            <a class="inode-title" href="{{ url_for('inode', inode_id=row.inode.id)}}">{{ row.inode.title }}</a>
+            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.aifnode.id)}}">{{ row.aifnode.title }}</a>
         </li>
         {% endfor %}        
     </ul>
     <ul class="" >
         <h3>Opposed propositions</h3>
-        {% for row in opposed_inodes %}
+        {% for row in opposed_aifnodes %}
         <li>
-            <a class="inode-title" href="{{ url_for('inode', inode_id=row.inode.id)}}">{{ row.inode.title }}</a>
+            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.aifnode.id)}}">{{ row.aifnode.title }}</a>
         </li>
         {% endfor %}        
     </ul>
 </div>
 <div class="votemenu">
     <h3>agreeing_with_this_statement: {{agree_votes}}</h3>
-    <a href="{{ url_for('agree_with_inode', inode_id=inode.id)}}">agree</a><br>
+    <a href="{{ url_for('agree_with_aifnode', aifnode_id=aifnode.id)}}">agree</a><br>
     <h3>disagreeing_with_this_statement: {{disagree_votes}}</h3>
-    <a href="{{ url_for('disagree_with_inode', inode_id=inode.id) }}">disagree</a><br>
+    <a href="{{ url_for('disagree_with_aifnode', aifnode_id=aifnode.id) }}">disagree</a><br>
     <h3>undecided_on_this_statement: {{undecided_votes}}</h3>
-    <a href="{{ url_for('undecided_on_inode', inode_id=inode.id) }}">undecided</a><br>
+    <a href="{{ url_for('undecided_on_aifnode', aifnode_id=aifnode.id) }}">undecided</a><br>
 </div>
 </p>
 <script>
