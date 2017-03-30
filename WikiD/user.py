@@ -1,6 +1,6 @@
 from py2neo import Graph, Node, Relationship, authenticate
 from passlib.hash import bcrypt
-from .models import timestamp, date, create_new_event
+from .models import timestamp, date, create_new_event, get_aifNode_by_title, get_aifNode
 from .db_connection import graph
 from datetime import datetime
 import uuid
@@ -38,7 +38,9 @@ class User:
                 id=str(uuid.uuid4()),
                 schema=schema,
                 source=source,
+                source_id=get_aifNode_by_title(source).properties["id"],
                 target=target,
+                target_id=get_aifNode_by_title(target).properties["id"],
                 title=source+" "+schema+" "+target,
                 timestamp=timestamp(),
                 date=date()
@@ -71,9 +73,9 @@ class User:
             for rel in oldvote:
                 graph.delete(rel)
 
-    def agree_with_aifnode(self, iNode_id, event_name):
+    def agree_with_aifnode(self, aifNode_id, event_name):
         user = self.find()
-        iNode = graph.find_one("INode", "id", iNode_id)
+        aifNode = get_aifNode(aifNode_id)
         cypher_string_find_event = "MATCH (n:User {username:'" + user.properties[
             "username"] + "'})-[r]->(:ENode {name:'" + event_name + "'})            RETURN count(n) "
         # check if user observes this event, and that it exists.
@@ -81,14 +83,14 @@ class User:
             event = create_new_event(user, event_name)
         else:
             event = graph.find_one("ENode", "name", event_name)
-        self.votetozero(event, iNode)
+        self.votetozero(event, aifNode)
         graph.create_unique(
             Relationship(user, "IN_EVENT", event),
-            Relationship(event, "AGREES_WITH", iNode))
+            Relationship(event, "AGREES_WITH", aifNode))
 
-    def disagree_with_aifnode(self, iNode_id, event_name):
+    def disagree_with_aifnode(self, aifNode_id, event_name):
         user = self.find()
-        iNode = graph.find_one("INode", "id", iNode_id)
+        aifNode = get_aifNode(aifNode_id)
         cypher_string = "MATCH (n:User {username:'" + user.properties[
             "username"] + "'})-[r]->(:ENode {name:'" + event_name + "'})            RETURN count(n) "
         # check if user observes this event, and that it exists.
@@ -96,14 +98,14 @@ class User:
             event = create_new_event(user, event_name)
         else:
             event = graph.find_one("ENode", "name", event_name)
-        self.votetozero(event, iNode)
+        self.votetozero(event, aifNode)
         graph.create_unique(
             Relationship(user, "IN_EVENT", event),
-            Relationship(event, "DISAGREES_WITH", iNode))
+            Relationship(event, "DISAGREES_WITH", aifNode))
 
-    def undecided_on_aifnode(self, iNode_id, event_name):
+    def undecided_on_aifnode(self, aifNode_id, event_name):
         user = self.find()
-        iNode = graph.find_one("INode", "id", iNode_id)
+        aifNode = get_aifNode(aifNode_id)
         cypher_string = "MATCH (n:User {username:'" + user.properties[
             "username"] + "'})-[r]->(:ENode {name:'" + event_name + "'})            RETURN count(n) "
         # check if user observes this event, and that it exists.
@@ -111,10 +113,10 @@ class User:
             event = create_new_event(user, event_name)
         else:
             event = graph.find_one("ENode", "name", event_name)
-        self.votetozero(event, iNode)
+        self.votetozero(event, aifNode)
         graph.create_unique(
             Relationship(user, "IN_EVENT", event),
-            Relationship(event, "UNDECIDED_ON", iNode)
+            Relationship(event, "UNDECIDED_ON", aifNode)
         )
 
     def like_aifnode(self, iNode_id):

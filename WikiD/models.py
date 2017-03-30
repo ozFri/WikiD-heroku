@@ -64,8 +64,10 @@ class AIFNode:
         self.type = self.aifnode.labels
         if "SNode" in self.type :
             self.schema = self.aifnode.properties["schema"]
-            self.source = get_aifNode_by_title(self.aifnode.properties["source"])
-            self.target = get_aifNode_by_title(self.aifnode.properties["target"])
+            self.source = self.aifnode.properties["source"]
+            self.target = self.aifnode.properties["target"]
+            self.source_id = self.aifnode.properties["source_id"]
+            self.target_id = self.aifnode.properties["target_id"]
         self.title = self.aifnode.properties["title"]
         self.supporting = self.get_neighbours("supporting")
         self.opposing = self.get_neighbours("opposing")
@@ -85,10 +87,9 @@ class AIFNode:
         query = """
         MATCH (aifnode)"""+reltype[inference][1]+"""(snode:SNode{schema:"""+'"'+reltype[inference][0]+'"'+"""})"""+reltype[inference][1]+"""({id:""" + '"' + self.id + '"' + """ })
         RETURN DISTINCT snode
-        ORDER BY snode.timestamp DESC LIMIT 500
+        ORDER BY snode.timestamp DESC LIMIT 5000
         """
-        results = graph.cypher.execute(query)
-        return [AIFNode(row.snode.properties["id"]) for row in results]
+        return graph.cypher.execute(query)
 
     def user_vote(self):
         query = """
