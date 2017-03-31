@@ -82,7 +82,7 @@ class AIFNode:
         reltype={"supporting": ("supports","-[:SArc]->"),
                  "supported" : ("supports","<-[:SArc]-"),
                  "opposing"  : ("opposes","-[:SArc]->"),
-                 "opposed"   : ("opposses","<-[:SArc]-")
+                 "opposed"   : ("opposes","<-[:SArc]-")
                  }
         query = """
         MATCH (aifnode)"""+reltype[inference][1]+"""(snode:SNode{schema:"""+'"'+reltype[inference][0]+'"'+"""})"""+reltype[inference][1]+"""({id:""" + '"' + self.id + '"' + """ })
