@@ -121,7 +121,7 @@
         {% for row in opposed_nodes %}
         <li>
             "{{row.snode.source}}"
-            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.id)}}">"{{ row.snode.title }}"</a>
+            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.id)}}">"{{ row.snode.schema }}"</a>
             <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.target_id)}}"> "{{ row.snode.target}}"</a>
         </li>
         {% endfor %}        
