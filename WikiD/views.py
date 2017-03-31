@@ -82,6 +82,11 @@ def init_rest_interface(cfg, flask_webapp):
 
 @app.route('/<aifnode_id>/add-Snode', methods=['POST','GET'])
 def add_S_node(aifnode_id):
+    username = session.get('username')
+    eventname = session.get('eventname')
+    if not username:
+        flash('You must be logged in to agree with a post.')
+        return redirect(url_for('login'))
     aifnode = AIFNode(aifnode_id)
     aifnodes = get_aifNodes()
     #the type of the schema
@@ -120,10 +125,6 @@ def event():
 
 @app.route('/aifnodes/<aifnode_id>')
 def aifNode(aifnode_id):
-    username = session.get('username')
-    if not username:
-        flash('You must be logged in to access this page')
-        return redirect(url_for('login'))
     aifnode = AIFNode(aifnode_id)
     aifnodes = aifnode.aifnodes
     agree_votes = aifnode.agreeing
@@ -230,6 +231,11 @@ def undecided_on_aifnode(aifnode_id):
 
 @app.route('/<aifnode_id>/delete')
 def delete_aifnode(aifnode_id):
+    username = session.get('username')
+    eventname = session.get('eventname')
+    if not username:
+        flash('You must be logged in to delete a post.')
+        return redirect(url_for('login'))
     aifnode = AIFNode(aifnode_id)
     aifnode.delete()
     flash('Deleted Node')

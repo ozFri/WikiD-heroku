@@ -92,6 +92,9 @@ class AIFNode:
         return graph.cypher.execute(query)
 
     def user_vote(self):
+        username = session.get("username")
+        if username is None:
+            return
         query = """
         MATCH (User{username:"""+'"'+session["username"]+'"'+"""})-[OBSERVES]->(ENode{name:"""+'"'+session["eventname"]+'"'+"""})-[vote]->(SNode{title:"""+'"'+self.title+'"'+"""})
         RETURN vote
@@ -99,8 +102,11 @@ class AIFNode:
         return graph.cypher.execute(query)
 
     def get_votes(self,vote_type):
+        eventname = session.get("eventname")
+        if eventname is None:
+            eventname = "General"
         query = """
-        MATCH (User)-[OBSERVES]->(ENode{name:"""+'"'+session["eventname"]+'"'+"""})-[vote:"""+vote_type+"""]->(SNode{title:"""+'"'+self.title+'"'+"""})
+        MATCH (User)-[OBSERVES]->(ENode{name:"""+'"'+eventname+'"'+"""})-[vote:"""+vote_type+"""]->(SNode{title:"""+'"'+self.title+'"'+"""})
         RETURN count(DISTINCT vote) as votes
         """
         return graph.cypher.execute(query).one
