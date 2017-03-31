@@ -20,12 +20,13 @@
         {{aifnode.title}}
 {% endif %}
 {% if "SNode" in aifnode.type %}
-        <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=aifnode.source_id)}}">{{ aifnode.source}}</a>
+        <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=aifnode.source_id)}}">"{{ aifnode.source}}"</a>
         {{ aifnode.schema }}  
-        <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=aifnode.target_id)}}">{{ aifnode.target}}</a>
+        <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=aifnode.target_id)}}">"{{ aifnode.target}}"</a>
 {% endif %}
     </h2>
     {{aifnode.date}}
+    <a href="{{ url_for('delete_aifnode', aifnode_id=aifnode.id)}}">delete</a><br>
 </div>
 <p>
 <div id="schemamenu-left">
@@ -58,9 +59,9 @@
         <h3>Supporting propositions</h3>
         {% for row in supporting_nodes %}
         <li>
-            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.source_id)}}">{{ row.snode.source}}</a>
+            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.source_id)}}">"{{ row.snode.source}}"</a>
             <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.id)}}">  {{ row.snode.schema }}  </a>
-            {{ row.snode.target }}
+            &nbsp"{{ row.snode.target }}"
         </li>
             {% endfor %}        
     </ul>
@@ -68,9 +69,9 @@
         <h3>Opposing propositions</h3>
         {% for row in opposing_nodes %}
         <li>
-            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.source_id)}}">{{ row.snode.source }}</a>
+            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.source_id)}}">"{{ row.snode.source }}"</a>
             <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.id)}}">  {{ row.snode.schema }}  </a>
-            {{ row.snode.target }}
+            &nbsp"{{ row.snode.target }}"
         </li>
             {% endfor %}        
     </ul>
@@ -109,9 +110,9 @@
         <h3>Supported propositions</h3>
         {% for row in supported_nodes %}
         <li>
-            {{ row.snode.source}}
+            "{{row.snode.source}}"
             <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.id)}}">  {{ row.snode.schema }}  </a>
-            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.target_id)}}">{{ row.snode.target}}</a>
+            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.target_id)}}"> "{{ row.snode.target}}"</a>
         </li>
         {% endfor %}        
     </ul>
@@ -119,9 +120,9 @@
         <h3>Opposed propositions</h3>
         {% for row in opposed_nodes %}
         <li>
-            {{ row.snode.source}}
-            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.id)}}">{{ row.snode.title }}</a>
-            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.target_id)}}">{{ row.snode.target}}</a>
+            "{{row.snode.source}}"
+            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.id)}}">"{{ row.snode.title }}"</a>
+            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.target_id)}}"> "{{ row.snode.target}}"</a>
         </li>
         {% endfor %}        
     </ul>

@@ -1,4 +1,4 @@
-from py2neo import Graph, Node, Relationship, authenticate
+from py2neo import Graph, Node, Relationship, authenticate 
 from passlib.hash import bcrypt
 from .db_connection import graph
 from flask import session
@@ -104,3 +104,7 @@ class AIFNode:
         RETURN count(DISTINCT vote) as votes
         """
         return graph.cypher.execute(query).one
+
+    def delete(self):
+        graph.cypher.execute("""MATCH (n) where n.id="""+'"'+self.id+'"'+""" DETACH DELETE n""")
+        

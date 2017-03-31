@@ -228,6 +228,13 @@ def undecided_on_aifnode(aifnode_id):
     flash('Undecided on post in event "' + eventname + '"')
     return redirect(request.referrer)
 
+@app.route('/<aifnode_id>/delete')
+def delete_aifnode(aifnode_id):
+    aifnode = AIFNode(aifnode_id)
+    aifnode.delete()
+    flash('Deleted Node')
+    return redirect("/index")
+
 @app.route('/profile/<username>')
 def profile(username):
     logged_in_username = session.get('username')
