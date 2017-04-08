@@ -16,126 +16,160 @@
 {% endif %}
 <div class="post-header">
     <h2>
-{% if "INode" in aifnode.type %}
+    {% if "INode" in aifnode.type %}
         {{aifnode.title}}
-{% endif %}
-{% if "SNode" in aifnode.type %}
+    {% endif %}
+    {% if "SNode" in aifnode.type %}
         <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=aifnode.source_id)}}">"{{ aifnode.source}}"</a>
         {{ aifnode.schema }}  
         <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=aifnode.target_id)}}">"{{ aifnode.target}}"</a>
-{% endif %}
+    {% endif %}
+    <a class="btn btn-link" href="{{ url_for('delete_aifnode', aifnode_id=aifnode.id)}}">delete</a><br>
     </h2>
     {{aifnode.date}}
-    <a href="{{ url_for('delete_aifnode', aifnode_id=aifnode.id)}}">delete</a><br>
 </div>
-<p>
-<div id="schemamenu-left">
-    <form method="Post" action="{{ url_for('add_S_node',aifnode_id=aifnode.id) }}">
-        <select name="source" id="fuzzDrop1">
-            {% for row in aifnode.aifnodes %}
-            <option value={{ loop.index }}>{{ row.aifnode.title }}</option> 
-            {% endfor %}
-        </select>
-        <div id="fuzzSearch">
-            <div id="fuzzNameContainer">
-                <span class="fuzzName"></span>
-                <span class="fuzzArrow"></span>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+        </div>  
+        <div class="col-md-2 bg-success">
+            <a class="btn btn-success" href="{{ url_for('agree_with_aifnode', aifnode_id=aifnode.id)}}">agree</a><br>
+            {{agree_votes}} agreeing
+        </div>  
+        <div class="col-md-2 bg-danger">
+            <a class="btn btn-danger" href="{{ url_for('disagree_with_aifnode', aifnode_id=aifnode.id) }}">disagree</a><br>
+            {{disagree_votes}} disagreeing
+        </div>  
+        <div class="col-md-2 bg-warning">
+            <a class="btn btn-warning" href="{{ url_for('undecided_on_aifnode', aifnode_id=aifnode.id) }}">undecided</a><br>
+            {{undecided_votes}} undecided
+        </div>  
+        <div class="col-sm-3">
+        </div>  
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+        <div class="panel panel-primary">
+            <div class="row">
+            <form method="Post" action="{{ url_for('add_S_node',aifnode_id=aifnode.id) }}">
+            <div class="col-sm-5">
+                <select name="source" id="fuzzDrop1">
+                    {% for row in aifnode.aifnodes %}
+                    <option value={{ loop.index }}>{{ row.aifnode.title }}</option> 
+                    {% endfor %}
+                </select>
+                <div id="fuzzSearch">
+                    <div id="fuzzNameContainer">
+                        <span class="fuzzName"></span>
+                        <span class="fuzzArrow"></span>
+                    </div>
+                    <div id="fuzzDropdownContainer">
+                        <input type="text" value="" class="fuzzMagicBox" placeholder="search.." />
+                        <span class="fuzzSearchIcon"></span>
+                        <ul id="fuzzResults">
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div id="fuzzDropdownContainer">
-                <input type="text" value="" class="fuzzMagicBox" placeholder="search.." />
-                <span class="fuzzSearchIcon"></span>
-                <ul id="fuzzResults">
-                </ul>
+            <div class="col-sm-2">
+                <select name="schema" class="schema-select">
+                    <option>supports</option>
+                    <option>opposes</option>
+                </select>
+            </div>
+            <div class="col-sm-5">
+                {{aifnode.title}}
+            </div>
+            </div>
+            <div class="row">
+                <input type="submit" class="SNode-submit btn btn-default" value="Submit">
+            </div>
+            </div>
+            </form>
+            <ul class="panel panel-success" >
+                <h4 class="panel-heading">Supporting propositions</h4>
+                {% for row in supporting_nodes %}
+                <li>
+                    <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.source_id)}}">"{{ row.snode.source}}"</a>
+                    <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.id)}}">  {{ row.snode.schema }}  </a>
+                    &nbsp"{{ row.snode.target }}"
+                </li>
+                    {% endfor %}        
+            </ul>
+            <ul class="panel panel-danger" >
+                <h4 class="panel-heading">Opposing propositions</h4>
+                {% for row in opposing_nodes %}
+                <li>
+                    <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.source_id)}}">"{{ row.snode.source }}"</a>
+                    <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.id)}}">  {{ row.snode.schema }}  </a>
+                    &nbsp"{{ row.snode.target }}"
+                </li>
+                    {% endfor %}        
+            </ul>
+        </div>
+        <div class="col-lg-6">
+        <div class="panel panel-primary">
+        <div class="row">
+            <form method="POST" action="{{ url_for('add_S_node',aifnode_id=aifnode.id) }}">
+            <div class="col-sm-5">
+                {{aifnode.title}}
+            </div>
+            <div class="col-sm-2">
+                <select name="schema" class="schema-select">
+                    <option>supports</option>
+                    <option>opposes</option>
+                </select>
+            </div>
+            <div class="col-sm-5">
+                <select name="target" id="fuzzDrop2">
+                    {% for row in aifnode.aifnodes %}
+                    <option value={{loop.index}}>{{ row.aifnode.title }}</option> 
+                    {% endfor %}
+                </select>
+                <div id="fuzzSearch2">
+                    <div id="fuzzNameContainer">
+                        <span class="fuzzName"></span>
+                        <span class="fuzzArrow"></span>
+                    </div>
+                    <div id="fuzzDropdownContainer">
+                        <input type="text" value="" class="fuzzMagicBox" placeholder="search.." />
+                        <span class="fuzzSearchIcon"></span>
+                        <ul id="fuzzResults">
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
-        <select name="schema" class="schema-select">
-            <option>supports</option>
-            <option>opposes</option>
-        </select>
-        {{aifnode.title}}
-        <input type="submit" class="SNode-submit" value="Submit">
-    </form>
-    <ul class="" >
-        <h3>Supporting propositions</h3>
-        {% for row in supporting_nodes %}
-        <li>
-            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.source_id)}}">"{{ row.snode.source}}"</a>
-            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.id)}}">  {{ row.snode.schema }}  </a>
-            &nbsp"{{ row.snode.target }}"
-        </li>
-            {% endfor %}        
-    </ul>
-    <ul class="" >
-        <h3>Opposing propositions</h3>
-        {% for row in opposing_nodes %}
-        <li>
-            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.source_id)}}">"{{ row.snode.source }}"</a>
-            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.id)}}">  {{ row.snode.schema }}  </a>
-            &nbsp"{{ row.snode.target }}"
-        </li>
-            {% endfor %}        
-    </ul>
-</div>
-
-<div id="schemamenu-right">
-    <form method="POST" action="{{ url_for('add_S_node',aifnode_id=aifnode.id) }}">
-        {{aifnode.title}}
-        <select name="schema" class="schema-select">
-            <option>supports</option>
-            <option>opposes</option>
-        </select>
-        <div>
-            <select name="target" id="fuzzDrop2">
-                {% for row in aifnode.aifnodes %}
-                <option value={{loop.index}}>{{ row.aifnode.title }}</option> 
-                {% endfor %}
-            </select>
-        </div><!-- or <a href="">add</a> a new statement
-        <div id=""><input name ="new-target" type="text"></div>-->
-        <div id="fuzzSearch2">
-            <div id="fuzzNameContainer">
-                <span class="fuzzName"></span>
-                <span class="fuzzArrow"></span>
-            </div>
-            <div id="fuzzDropdownContainer">
-                <input type="text" value="" class="fuzzMagicBox" placeholder="search.." />
-                <span class="fuzzSearchIcon"></span>
-                <ul id="fuzzResults">
-                </ul>
-            </div>
+        <div class="row">
+            <input class="SNode-submit btn btn-default" type="submit" value="Submit">
         </div>
-        <input type="submit" value="Submit"class="SNode-submit">
-    </form>
-    <ul class="" >
-        <h3>Supported propositions</h3>
-        {% for row in supported_nodes %}
-        <li>
-            "{{row.snode.source}}"
-            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.id)}}">  {{ row.snode.schema }}  </a>
-            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.target_id)}}"> "{{ row.snode.target}}"</a>
-        </li>
-        {% endfor %}        
-    </ul>
-    <ul class="" >
-        <h3>Opposed propositions</h3>
-        {% for row in opposed_nodes %}
-        <li>
-            "{{row.snode.source}}"
-            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.id)}}">"{{ row.snode.schema }}"</a>
-            <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.target_id)}}"> "{{ row.snode.target}}"</a>
-        </li>
-        {% endfor %}        
-    </ul>
+        </div>
+        </form>
+            <ul class="panel panel-success">
+                <h4 class="panel-heading">Supported propositions</h4>
+                {% for row in supported_nodes %}
+                <li>
+                    "{{row.snode.source}}"
+                    <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.id)}}">  {{ row.snode.schema }}  </a>
+                    <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.target_id)}}"> "{{ row.snode.target}}"</a>
+                </li>
+                {% endfor %}        
+            </ul>
+            <ul class="panel panel-danger">
+                <h4 class="panel-heading">Opposed propositions</h4>
+                {% for row in opposed_nodes %}
+                <li>
+                    "{{row.snode.source}}"
+                    <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.id)}}">"{{ row.snode.schema }}"</a>
+                    <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.snode.target_id)}}"> "{{ row.snode.target}}"</a>
+                </li>
+                {% endfor %}        
+            </ul>
+        </div>
+    </div>
 </div>
-<div class="votemenu">
-    <h3>agreeing_with_this_statement: {{agree_votes}}</h3>
-    <a href="{{ url_for('agree_with_aifnode', aifnode_id=aifnode.id)}}">agree</a><br>
-    <h3>disagreeing_with_this_statement: {{disagree_votes}}</h3>
-    <a href="{{ url_for('disagree_with_aifnode', aifnode_id=aifnode.id) }}">disagree</a><br>
-    <h3>undecided_on_this_statement: {{undecided_votes}}</h3>
-    <a href="{{ url_for('undecided_on_aifnode', aifnode_id=aifnode.id) }}">undecided</a><br>
-</div>
-</p>
 <script>
     $('#fuzzDrop1').fuzzyDropdown({
         mainContainer: '#fuzzSearch',
