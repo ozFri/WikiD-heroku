@@ -1,15 +1,12 @@
-from py2neo import Graph, Node, Relationship
+from py2neo import Graph, Node, Relationship, authenticate
 from passlib.hash import bcrypt
 from flask import session
 from datetime import datetime
 import os
 import uuid
-from urllib.parse import urlparse, urlunparse
 
-graphenedb_url = os.environ.get("GRAPHENEDB_BOLT_URL")
-graphenedb_user = os.environ.get("GRAPHENEDB_BOLT_USER")
-graphenedb_pass = os.environ.get("GRAPHENEDB_BOLT_PASSWORD")
-graph = Graph(graphenedb_url, user=graphenedb_user, password=graphenedb_pass, bolt = True, secure = True)
+authenticate("hobby-geefdaeefcom.dbs.graphenedb.com:24789", "v303", "GtGq5rldxu")
+graph = Graph("http://hobby-geefdaeefcom.dbs.graphenedb.com:24789", bolt = False)
 
 
 def create_new_vote(user, vote_type, event, node):
