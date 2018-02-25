@@ -7,7 +7,7 @@ import uuid
 from urllib.parse import urlparse, urlunparse
 
 
-url = urlparse(os.environ.get(" https://app45980694:b.IFxqiXzL394c.k6N0l9gZSWC1u2IT@hobby-hneflojbolibgbkedbkaipml.dbs.graphenedb.com:24780"))
+url = urlparse(os.environ.get("GRAPHENEDB_URL","http://localhost:7474"))
 url_without_auth = urlunparse((url.scheme, "{0}:{1}".format(url.hostname, url.port), '', None, None, None))
 user = url.username
 password = url.password
