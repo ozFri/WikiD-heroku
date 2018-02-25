@@ -10,13 +10,13 @@ graphNodes = [("User", "username"),
               ("ENode", "id"),
               ("SNode", "id"),
               ("SArc", "id"),
-              ("Vote", "id")]
+              ("VNode", "id")]
 
 
-def create_uniqueness_constraint(label, property):
-    query = "CREATE CONSTRAINT ON (n:{label}) ASSERT n.{property} IS UNIQUE"
-    query = query.format(label=label, property=property)
-    graph.cypher.execute(query)
+def create_uniqueness_constraint(label, prop):
+    query = "CREATE CONSTRAINT ON (n:{label}) ASSERT n.{prop} IS UNIQUE"
+    query = query.format(label=label, prop=prop)
+    graph.run(query)
 
 
 for l, p in graphNodes:

@@ -1,4 +1,4 @@
-from .models import AIFNode, get_aifNodes, get_aifNode, create_new_schema_relationship
+from .models import AIFNode, get_aifNodes, get_aifNode, create_new_schema_relationship,rename_iNode
 from flask import Flask, request, session, redirect, url_for, render_template, flash
 from .user import User
 
@@ -84,7 +84,7 @@ def init_rest_interface(cfg, flask_webapp):
 def add_S_node(aifnode_id):
     username = session.get('username')
     eventname = session.get('eventname')
-    if not username:
+    if not username or username == "Guest":
         flash('You must be logged in to agree with a post.')
         return redirect(url_for('login'))
     aifnode = AIFNode(aifnode_id)
@@ -99,10 +99,10 @@ def add_S_node(aifnode_id):
     #newSource = request.form.getlist('new-source',None)
     schemaID = None
     if targetIndex is not None:
-        target = aifnodes[int(targetIndex)-1].aifnode['title']
+        target = aifnodes[int(targetIndex)-1]['aifnode']['title']
         source = aifnode.title
     elif sourceIndex is not None:    
-        source = aifnodes[int(sourceIndex)-1].aifnode['title']
+        source = aifnodes[int(sourceIndex)-1]['aifnode']['title']
         target = aifnode.title
     #elif newTarget is not None:    
     #    User(session['username']).add_I_Node(newTarget)
@@ -193,13 +193,25 @@ def add_I_Node():
 def agree_with_aifnode(aifnode_id):
     username = session.get('username')
     eventname = session.get('eventname')
-    if not username:
+    if not username or username == "Guest":
         flash('You must be logged in to agree with a post.')
         return redirect(url_for('login'))
 
-    User(username).agree_with_aifnode(aifnode_id, eventname)
+    User(username).vote_on_aifnode(aifnode_id, eventname, "Agree")
 
     flash('Agreed with inode in event "' + eventname + '"')
+    return redirect(request.referrer)
+
+@app.route('/<inode_id>/rename')
+def rename_I_Node(inode_id):
+    username = session.get('username')
+    eventname = session.get('eventname')
+    if not username or username == "Guest":
+        flash('You must be logged in to agree with a post.')
+        return redirect(url_for('login'))
+    newTitle = request.form['new-title']
+    rename_iNode(aifnode_id,newTitle)
+
     return redirect(request.referrer)
 
 @app.route('/disagree_with_aifnode/<aifnode_id>')
@@ -207,11 +219,11 @@ def disagree_with_aifnode(aifnode_id):
     username = session.get('username')
     eventname = session.get('eventname')
 
-    if not username:
+    if not username or username == "Guest":
         flash('You must be logged in to disagree with a post.')
         return redirect(url_for('login'))
 
-    User(username).disagree_with_aifnode(aifnode_id, eventname)
+    User(username).vote_on_aifnode(aifnode_id, eventname, "Disagree")
 
     flash('Disagreed with aifnode in event "' + eventname + '"')
     return redirect(request.referrer)
@@ -220,11 +232,11 @@ def disagree_with_aifnode(aifnode_id):
 def undecided_on_aifnode(aifnode_id):
     username = session.get('username')
     eventname = session.get('eventname')
-    if not username:
+    if not username or username == "Guest":
         flash('You must be logged in to follow a post.')
         return redirect(url_for('login'))
 
-    User(username).undecided_on_aifnode(aifnode_id, eventname)
+    User(username).vote_on_aifnode(aifnode_id, eventname, "Undecided")
 
     flash('Undecided on post in event "' + eventname + '"')
     return redirect(request.referrer)
@@ -233,7 +245,7 @@ def undecided_on_aifnode(aifnode_id):
 def delete_aifnode(aifnode_id):
     username = session.get('username')
     eventname = session.get('eventname')
-    if not username:
+    if not username or username == "Guest":
         flash('You must be logged in to delete a post.')
         return redirect(url_for('login'))
     aifnode = AIFNode(aifnode_id)

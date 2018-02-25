@@ -1,6 +1,6 @@
 from py2neo import Graph, Node, Relationship, authenticate
 from passlib.hash import bcrypt
-from .models import timestamp, date, create_new_event, get_aifNode_by_title, get_aifNode
+from .models import timestamp, date, create_new_event,create_new_vote, get_aifNode_by_title, get_aifNode
 from .db_connection import graph
 from datetime import datetime
 import uuid
@@ -61,68 +61,36 @@ class User:
         rel = Relationship(user, "PUBLISHED", iNode)
         graph.create(rel)
 
-#        tags = [x.strip() for x in tags.lower().split(',')]
-#        for t in set(tags):
-#            tag = graph.merge_one("Tag", "name", t)
-#            rel = Relationship(tag, "TAGGED", post)
-#            graph.create(rel)
+    #Tags Stuff
+        #tags = [x.strip() for x in tags.lower().split(',')]
+        #for t in set(tags):
+            #tag = graph.merge_one("Tag", "name", t)
+            #rel = Relationship(tag, "TAGGED", post)
+            #graph.create(rel)
 
-    def votetozero(self, event, iNode):
-        oldvote = graph.match(start_node=event, rel_type=None, end_node=iNode)
-        if oldvote is not None:
-            for rel in oldvote:
-                graph.delete(rel)
-
-    def agree_with_aifnode(self, aifNode_id, event_name):
+    def vote_on_aifnode(self, aifNode_id, event_name, vote_type):
         user = self.find()
         aifNode = get_aifNode(aifNode_id)
-        cypher_string_find_event = "MATCH (n:User {username:'" + user.properties[
-            "username"] + "'})-[r]->(:ENode {name:'" + event_name + "'})            RETURN count(n) "
-        # check if user observes this event, and that it exists.
-        if not graph.cypher.execute(cypher_string_find_event).one:
-            event = create_new_event(user, event_name)
+        cypher_string_find_event = \
+            "MATCH (:User {username:'" + user.properties[ "username"] + "'})-[r]->(n:ENode {name:'" + event_name + "'})\
+            RETURN count(n) "
+        cypher_string_find_vote = \
+            "MATCH vote WHERE \
+            (:User {username:'" + user.properties[ "username"] + "'})-[:VOTED]->(vote:VNode)\
+            AND (vote)-[:APPLIES_TO]->(:ENode {name:'" + event_name + "'})\
+            AND (vote)-[:APPLIES_TO]->({id:'" + aifNode_id + "'})\
+            RETURN vote"
+        # check if user observes this event, and that it exists, otherwise, create it.
+        vote = graph.evaluate(cypher_string_find_vote)
+        if vote is not None:
+            vote["name"] = vote_type
+            graph.push(vote)
         else:
-            event = graph.find_one("ENode", "name", event_name)
-        self.votetozero(event, aifNode)
-        graph.create_unique(
-            Relationship(user, "IN_EVENT", event),
-            Relationship(event, "AGREES_WITH", aifNode))
-
-    def disagree_with_aifnode(self, aifNode_id, event_name):
-        user = self.find()
-        aifNode = get_aifNode(aifNode_id)
-        cypher_string = "MATCH (n:User {username:'" + user.properties[
-            "username"] + "'})-[r]->(:ENode {name:'" + event_name + "'})            RETURN count(n) "
-        # check if user observes this event, and that it exists.
-        if not graph.cypher.execute(cypher_string).one:
-            event = create_new_event(user, event_name)
-        else:
-            event = graph.find_one("ENode", "name", event_name)
-        self.votetozero(event, aifNode)
-        graph.create_unique(
-            Relationship(user, "IN_EVENT", event),
-            Relationship(event, "DISAGREES_WITH", aifNode))
-
-    def undecided_on_aifnode(self, aifNode_id, event_name):
-        user = self.find()
-        aifNode = get_aifNode(aifNode_id)
-        cypher_string = "MATCH (n:User {username:'" + user.properties[
-            "username"] + "'})-[r]->(:ENode {name:'" + event_name + "'})            RETURN count(n) "
-        # check if user observes this event, and that it exists.
-        if not graph.cypher.execute(cypher_string).one:
-            event = create_new_event(user, event_name)
-        else:
-            event = graph.find_one("ENode", "name", event_name)
-        self.votetozero(event, aifNode)
-        graph.create_unique(
-            Relationship(user, "IN_EVENT", event),
-            Relationship(event, "UNDECIDED_ON", aifNode)
-        )
-
-    def like_aifnode(self, iNode_id):
-        user = self.find()
-        iNode = graph.find_one("INode", "id", iNode_id)
-        graph.create_unique(Relationship(user, "LIKED", iNode))
+            if not graph.run(cypher_string_find_event).evaluate():
+                event = create_new_event(user, event_name)
+            else:
+                event = graph.find_one("ENode", "name", event_name)
+            create_new_vote(user, vote_type, event, aifNode)
 
     def get_recent_posts(self):
         query = """
@@ -132,7 +100,7 @@ class User:
         ORDER BY aifnode.timestamp DESC LIMIT 500
         """
 
-        return graph.cypher.execute(query, username=self.username)
+        return graph.run(query, username=self.username)
 
     def get_similar_users(self):
         # Find three users who are most similar to the logged-in user
@@ -146,7 +114,7 @@ class User:
         RETURN they.username AS similar_user, tags
         """
 
-        return graph.cypher.execute(query, username=self.username)
+        return graph.run(query, username=self.username)
 
     def get_commonality_of_user(self, other):
         # Find how many of the logged-in user's posts the other user
@@ -160,7 +128,7 @@ class User:
         RETURN COUNT(DISTINCT post) AS likes, COLLECT(DISTINCT tag.name) AS tags
         """
 
-        return graph.cypher.execute(query, they=other.username, you=self.username)[0]
+        return graph.run(query, they=other.username, you=self.username)[0]
 
     def register_validation(flash_func, user_name, password):
         if len(user_name) < 1:

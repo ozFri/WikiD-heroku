@@ -1,11 +1,11 @@
-  <ul class="posts">
+  <ul class="list">
   {% for row in aifnodes %}
     <li>
         <b><a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.aifnode.id)}}">{{ row.aifnode.title }}</a></b>
         {% if request.path == "/" %}
     by <a href="{{ url_for('profile', username=row.username) }}">{{ row.username }}</a>
         {% endif %}
-    	on {{ row.aifnode.date }}
+    	on <span class="date">{{ row.aifnode.date }}</span>
         <div class="votemenu">
             <a href="#vote-menu{{loop.index}}">vote</a>
             <div id="vote-menu{{loop.index}}" class="vote-anchor"><p><form action="{{ url_for('change_event') }}" method="post">
@@ -19,5 +19,8 @@
     <li>there aren't any posts yet!
   {% endfor %}
   </ul>
+<script>
+var options = { valueNames: [ 'aifnode-title','date' ] };
 
-  <!--<script type=text/javascript src="{{ url_for('static', filename='javascript/util.js') }}"></script>-> 
+var aifnodeList = new List('aifnodes', options);
+</script>

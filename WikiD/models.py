@@ -6,6 +6,19 @@ from datetime import datetime
 import os
 import uuid
 
+def create_new_vote(user, vote_type, event, node):
+    vote = Node(
+        "VNode",
+        id=str(uuid.uuid4()),
+        name=vote_type,
+        timestamp=timestamp(),
+        date=date()
+    )
+    graph.create(vote)
+    graph.merge(Relationship(user, "VOTED", vote))
+    graph.merge(Relationship(vote, "APPLIES_TO", event))
+    graph.merge(Relationship(vote, "APPLIES_TO", node))
+    return event
 def create_new_event(user, event_name="General"):
     event = Node(
         "ENode",
@@ -15,7 +28,7 @@ def create_new_event(user, event_name="General"):
         date=date()
     )
     graph.create(event)
-    graph.create_unique(Relationship(user, "OBSERVES", event))
+    graph.merge(Relationship(user, "OBSERVES", event))
     return event
 
 def create_new_schema_relationship(source, schemaID, target):
@@ -45,7 +58,7 @@ def get_aifNodes():
     RETURN user.username AS username, aifnode
     ORDER BY aifnode.timestamp DESC LIMIT 5000
     """
-    return graph.cypher.execute(query) 
+    return graph.run(query).data()
 
 def timestamp():
     epoch = datetime.utcfromtimestamp(0)
@@ -56,13 +69,18 @@ def timestamp():
 def date():
     return datetime.now().strftime('%F')
 
+
+def rename_iNode(inode_id,new_title):
+    iNode=get_aifNode(inode_id)
+    iNode["title"]=new_title
+        
 class AIFNode:
     def __init__(self, aifNodeID):
         self.id = aifNodeID
         self.aifnode = get_aifNode(aifNodeID)
         self.aifnodes = get_aifNodes()
         self.type = self.aifnode.labels
-        if "SNode" in self.type :
+        if "SNode" in self.type():
             self.schema = self.aifnode.properties["schema"]
             self.source = self.aifnode.properties["source"]
             self.target = self.aifnode.properties["target"]
@@ -73,9 +91,9 @@ class AIFNode:
         self.opposing = self.get_neighbours("opposing")
         self.supported = self.get_neighbours("supported")
         self.opposed = self.get_neighbours("opposed")
-        self.agreeing = self.get_votes("AGREES_WITH")
-        self.disagreeing = self.get_votes("DISAGREES_WITH")
-        self.undecided = self.get_votes("UNDECIDED_ON")
+        self.agreeing = self.get_votes("Agree")
+        self.disagreeing = self.get_votes("Disagree")
+        self.undecided = self.get_votes("Undecided")
         self.user_vote = self.user_vote()
 
     def get_neighbours(self,inference):
@@ -89,7 +107,7 @@ class AIFNode:
         RETURN DISTINCT snode
         ORDER BY snode.timestamp DESC LIMIT 5000
         """
-        return graph.cypher.execute(query)
+        return graph.run(query)
 
     def user_vote(self):
         username = session.get("username")
@@ -99,18 +117,18 @@ class AIFNode:
         MATCH (User{username:"""+'"'+session["username"]+'"'+"""})-[OBSERVES]->(ENode{name:"""+'"'+session["eventname"]+'"'+"""})-[vote]->(SNode{title:"""+'"'+self.title+'"'+"""})
         RETURN vote
         """
-        return graph.cypher.execute(query)
+        return graph.run(query)
 
     def get_votes(self,vote_type):
         eventname = session.get("eventname")
         if eventname is None:
             eventname = "General"
         query = """
-        MATCH (User)-[OBSERVES]->(ENode{name:"""+'"'+eventname+'"'+"""})-[vote:"""+vote_type+"""]->(SNode{title:"""+'"'+self.title+'"'+"""})
+        MATCH vote WHERE (:User)-[:VOTED]->(vote:VNode)-[:APPLIES_TO]->(:ENode{name:"""+'"'+eventname+'"'+"""}) AND (vote{name:"""+'"'+vote_type+'"'+"""})-[:APPLIES_TO]->({title:"""+'"'+self.title+'"'+"""})
         RETURN count(DISTINCT vote) as votes
         """
-        return graph.cypher.execute(query).one
+        return graph.run(query).evaluate()
+
 
     def delete(self):
-        graph.cypher.execute("""MATCH (n) where n.id="""+'"'+self.id+'"'+""" DETACH DELETE n""")
-        
+        graph.run("""MATCH (n) where n.id="""+'"'+self.id+'"'+""" DETACH DELETE n""")

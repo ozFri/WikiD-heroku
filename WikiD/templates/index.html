@@ -2,16 +2,13 @@
 {% block body %}
 
 <h2>Home</h2>
+<div id="aifnodes">
   {% if session.username %}
     <h3>State your mind</h3>
     <form action="{{ url_for('add_I_Node') }}" method="post">
         <dl>
             <dt>Statement:</dt>
-            <dd><input type="text" size="30" name="title"></dd>
-<!--            <dt>Tags (separated by commas):</dt>
-            <dd><input type="text" size="30" name="tags"></dd>
-            <dt>Text:</dt>
-            <dd><textarea name="text" rows="5" cols="40"></textarea></dd>-->
+            <dd><input class="search" type="text" size="30" name="title"></dd>
         </dl>
         <input type="submit" value="Share">
     </form>
@@ -20,6 +17,10 @@
 <br>
 
 <h3>Today's Recent Statements</h3>
+  <button class="sort" data-sort="aifnode-title">
+      Sort
+  </button>
 {% include "display_posts.html" %}
+</div>
 
 {% endblock %}

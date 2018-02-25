@@ -15,11 +15,12 @@
 </form>
 {% endif %}
 <div class="post-header">
-    <h2>
-    {% if "INode" in aifnode.type %}
-        {{aifnode.title}}
+    <h2 id="aifnode-title">
+    {% if "INode" in aifnode.type() %}
+    {{aifnode.title}}
+    <a id="edit-button" class="btn btn-link" onclick="editTitle()">edit</a>
     {% endif %}
-    {% if "SNode" in aifnode.type %}
+    {% if "SNode" in aifnode.type() %}
         <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=aifnode.source_id)}}">"{{ aifnode.source}}"</a>
         {{ aifnode.schema }}  
         <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=aifnode.target_id)}}">"{{ aifnode.target}}"</a>
@@ -136,7 +137,7 @@
                     <div id="fuzzDropdownContainer">
                         <input type="text" value="" class="fuzzMagicBox" placeholder="search.." />
                         <span class="fuzzSearchIcon"></span>
-                        <ul id="fuzzResults">
+                        <ul id="fuzzResults2">
                         </ul>
                     </div>
                 </div>
@@ -188,4 +189,15 @@
 </script>
 
 
+<script type="text/JavaScript">
+function editTitle(){
+  var title = document.getElementById("aifnode-title");
+  var titleEdit = document.createElement("input");
+  var editButton = document.getElementById("edit-button");
+  var confirmButton = document.createElement("a");
+  confirmButton.innerHTML = "confirm";
+  title.parentNode.replaceChild(titleEdit, title);
+  editButton.parentNode.replaceChild(confirmButton, editButton);
+  }
+</script>
 {% endblock %}

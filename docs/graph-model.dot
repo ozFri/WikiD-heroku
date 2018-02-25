@@ -1,0 +1,65 @@
+digraph graph_name {
+  graph [
+    charset = "UTF-8";
+    label = "sample graph",
+    labelloc = "t",
+    labeljust = "c",
+    bgcolor = "#FFFFFF",
+    fontcolor = white,
+    fontsize = 18,
+    style = "filled",
+    rankdir = TB,
+    margin = 0.2,
+    splines = spline,
+    ranksep = 1.0,
+    nodesep = 0.9
+  ];
+
+  node [
+    colorscheme = "rdylgn11"
+    style = "solid,filled",
+    fontsize = 14,
+    fontcolor = "#000000",
+    fontname = "Migu 1M",
+    color = 7,
+    fillcolor = "#FFFFFF",
+    fixedsize = false,
+    height = 0.6,
+    width = 1.2
+  ];
+
+  edge [
+    style = solid,
+    fontsize = 12,
+    fontcolor = "#3434FF",
+    fontname = "Migu 1M",
+    color = black,
+    labelfloat = true,
+    labeldistance = 3.5,
+    labelangle = 70
+  ];
+
+  subgraph cluster1 {
+      
+  }
+  subgraph cluster2 {
+      
+  }
+  // node define
+    User [];
+    INode [label = "I-Node"];
+    SNode [];
+    ENode [];
+    Vote [];
+
+  // edge define
+    User->INode [label = "Author"]
+    User->SNode [label = "Author"]
+    User->ENode [label = "Observes"]
+    INode->SNode
+    SNode->INode
+    User->Vote
+    Vote->ENode
+    Vote->INode
+    Vote->SNode
+}
