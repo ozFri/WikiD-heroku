@@ -4,12 +4,16 @@ from flask import session
 from datetime import datetime
 import os
 import uuid
+from urllib.parse import urlparse, urlunparse
 
-url = os.environ.get('GRAPHENEDB_URL', 'http://localhost:7474')
-username = os.environ.get('NEO4J_USERNAME')
-password = os.environ.get('NEO4J_PASSWORD')
 
-graph = Graph(url + '/db/data/', username=username, password=password)
+url = urlparse(os.environ.get(" https://app45980694:b.IFxqiXzL394c.k6N0l9gZSWC1u2IT@hobby-hneflojbolibgbkedbkaipml.dbs.graphenedb.com:24780"))
+url_without_auth = urlunparse((url.scheme, "{0}:{1}".format(url.hostname, url.port), '', None, None, None))
+user = url.username
+password = url.password
+
+authenticate(url_without_auth, user, password)
+graph = Graph(url_without_auth, bolt = False)
 
 
 def create_new_vote(user, vote_type, event, node):
