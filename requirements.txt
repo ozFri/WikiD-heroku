@@ -12,7 +12,6 @@ Flask-WTF==0.14.2
 idna==2.6
 itsdangerous==0.24
 Jinja2==2.10
-louis==3.4.0
 Mako==1.0.7
 MarkupSafe==1.0
 meld==3.18.0
