@@ -5,8 +5,10 @@ from datetime import datetime
 import os
 import uuid
 
-authenticate("hobby-geefdaeefcom.dbs.graphenedb.com:24789", "v303", "GtGq5rldxu")
-graph = Graph("http://hobby-geefdaeefcom.dbs.graphenedb.com:24789", bolt = False)
+#GRAPHENEDB_URL=https://app45980694-1SqesO:b.2Wbuj0oq2sYy.zJWPkmzpJi7O3G4U@
+
+authenticate("hobby-hankpoiekhacgbkegaaijpal.dbs.graphenedb.com:24789", "v329", "b.2Wbuj0oq2sYy.zJWPkmzpJi7O3G4U")
+graph = Graph("http://hobby-hankpoiekhacgbkegaaijpal.dbs.graphenedb.com:24780", bolt = False)
 
 
 def create_new_vote(user, vote_type, event, node):
