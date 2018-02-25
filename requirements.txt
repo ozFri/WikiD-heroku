@@ -14,8 +14,6 @@ itsdangerous==0.24
 Jinja2==2.10
 Mako==1.0.7
 MarkupSafe==1.0
-meld==3.18.0
-mps-youtube==0.2.7.1
 numpy==1.14.0
 packaging==16.8
 pafy==0.5.4
