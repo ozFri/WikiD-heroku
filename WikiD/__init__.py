@@ -1,5 +1,5 @@
 from .views import app
-from .db_connection import graph
+from .models import graph
 
 app.config.from_object('config')
 

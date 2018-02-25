@@ -1,10 +1,16 @@
 from py2neo import Graph, Node, Relationship, authenticate 
 from passlib.hash import bcrypt
-from .db_connection import graph
 from flask import session
 from datetime import datetime
 import os
 import uuid
+
+url = os.environ.get('GRAPHENEDB_URL', 'http://localhost:7474')
+username = os.environ.get('NEO4J_USERNAME')
+password = os.environ.get('NEO4J_PASSWORD')
+
+graph = Graph(url + '/db/data/', username=username, password=password)
+
 
 def create_new_vote(user, vote_type, event, node):
     vote = Node(

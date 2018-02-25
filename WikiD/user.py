@@ -1,7 +1,7 @@
 from py2neo import Graph, Node, Relationship, authenticate
 from passlib.hash import bcrypt
 from .models import timestamp, date, create_new_event,create_new_vote, get_aifNode_by_title, get_aifNode
-from .db_connection import graph
+from .models import graph
 from datetime import datetime
 import uuid
 import os
