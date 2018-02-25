@@ -1,4 +1,4 @@
-from py2neo import Graph, Node, Relationship, authenticate 
+from py2neo import Graph, Node, Relationship
 from passlib.hash import bcrypt
 from flask import session
 from datetime import datetime
