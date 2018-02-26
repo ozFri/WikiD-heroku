@@ -9,7 +9,7 @@ user = "app45980694-1SqesO"
 password ="b.2Wbuj0oq2sYy.zJWPkmzpJi7O3G4U"
 
 authenticate("hobby-hankpoiekhacgbkegaaijpal.dbs.graphenedb.com:24780", user, password)
-graph = Graph("https://hobby-hankpoiekhacgbkegaaijpal.dbs.graphenedb.com:24780", bolt = False, secure=True)
+graph = Graph("https://hobby-hankpoiekhacgbkegaaijpal.dbs.graphenedb.com:24780/db/data", bolt = False, secure=True)
 
 
 def create_new_vote(user, vote_type, event, node):
