@@ -4,9 +4,6 @@ from flask import session
 from datetime import datetime
 import os
 import uuid
-from urllib.parse import urlparse, urlunparse
-
-url = urlparse(os.environ.get("GRAPHENEDB_URL"))
 
 user = "app45980694-1SqesO"
 password ="b.2Wbuj0oq2sYy.zJWPkmzpJi7O3G4U"
