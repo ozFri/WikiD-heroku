@@ -8,7 +8,7 @@ import uuid
 user = "app45980694-1SqesO"
 password ="b.2Wbuj0oq2sYy.zJWPkmzpJi7O3G4U"
 
-authenticate("http://hobby-hankpoiekhacgbkegaaijpal.dbs.graphenedb.com:24780", user, password)
+authenticate("hobby-hankpoiekhacgbkegaaijpal.dbs.graphenedb.com:24780", user, password)
 graph = Graph("http://hobby-hankpoiekhacgbkegaaijpal.dbs.graphenedb.com:24780", bolt = False, secure=False)
 
 
