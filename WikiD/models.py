@@ -4,11 +4,15 @@ from flask import session
 from datetime import datetime
 import os
 import uuid
+from urllib.parse import urlparse, urlunparse
 
-#GRAPHENEDB_URL=https://app45980694-1SqesO:b.2Wbuj0oq2sYy.zJWPkmzpJi7O3G4U@hobby-hankpoiekhacgbkegaaijpal.dbs.graphenedb.com:24780
+url = urlparse(os.environ.get("GRAPHENEDB_URL"))
 
-authenticate("hobby-hankpoiekhacgbkegaaijpal.dbs.graphenedb.com:24789", "app45980694-1SqesO", "b.2Wbuj0oq2sYy.zJWPkmzpJi7O3G4U")
-graph = Graph("http://hobby-hankpoiekhacgbkegaaijpal.dbs.graphenedb.com:24780",secure = False , bolt = False)
+user = "app45980694-1SqesO"
+password ="b.2Wbuj0oq2sYy.zJWPkmzpJi7O3G4U"
+
+authenticate("https://hobby-hankpoiekhacgbkegaaijpal.dbs.graphenedb.com:24780", user, password)
+graph = Graph("https://hobby-hankpoiekhacgbkegaaijpal.dbs.graphenedb.com:24780", bolt = False)
 
 
 def create_new_vote(user, vote_type, event, node):
