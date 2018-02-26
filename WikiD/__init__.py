@@ -18,11 +18,6 @@ def create_uniqueness_constraint(label, prop):
     query = query.format(label=label, prop=prop)
     graph.run(query)
 
-create_uniqueness_constraint("User", "username"),
-create_uniqueness_constraint("Tag", "name"),
-create_uniqueness_constraint("Post", "id"),
-create_uniqueness_constraint("INode", "id"),
-create_uniqueness_constraint("ENode", "id"),
-create_uniqueness_constraint("SNode", "id"),
-create_uniqueness_constraint("SArc", "id"),
-create_uniqueness_constraint("VNode", "id")
+
+for l, p in graphNodes:
+    create_uniqueness_constraint(l, p)
