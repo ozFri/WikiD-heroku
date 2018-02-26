@@ -130,7 +130,7 @@ class AIFNode:
         if eventname is None:
             eventname = "General"
         query = """
-        MATCH vote WHERE (:User)-[:VOTED]->(vote:VNode)-[:APPLIES_TO]->(:ENode{name:"""+'"'+eventname+'"'+"""}) AND (vote{name:"""+'"'+vote_type+'"'+"""})-[:APPLIES_TO]->({title:"""+'"'+self.title+'"'+"""})
+        MATCH (vote) WHERE (:User)-[:VOTED]->(vote:VNode)-[:APPLIES_TO]->(:ENode{name:"""+'"'+eventname+'"'+"""}) AND (vote{name:"""+'"'+vote_type+'"'+"""})-[:APPLIES_TO]->({title:"""+'"'+self.title+'"'+"""})
         RETURN count(DISTINCT vote) as votes
         """
         return graph.run(query).evaluate()

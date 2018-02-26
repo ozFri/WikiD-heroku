@@ -75,7 +75,7 @@ class User:
             "MATCH (:User {username:'" + user.properties[ "username"] + "'})-[r]->(n:ENode {name:'" + event_name + "'})\
             RETURN count(n) "
         cypher_string_find_vote = \
-            "MATCH vote WHERE \
+            "MATCH (vote) WHERE \
             (:User {username:'" + user.properties[ "username"] + "'})-[:VOTED]->(vote:VNode)\
             AND (vote)-[:APPLIES_TO]->(:ENode {name:'" + event_name + "'})\
             AND (vote)-[:APPLIES_TO]->({id:'" + aifNode_id + "'})\
