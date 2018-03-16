@@ -189,17 +189,17 @@ def add_I_Node():
 
     return redirect(request.referrer)
 
-@app.route('/agree_with_aifnode/<aifnode_id>')
-def agree_with_aifnode(aifnode_id):
+@app.route('/<aifnode_id>/vote/<vote_type>')
+def vote_on_aifnode(aifnode_id,vote_type):
     username = session.get('username')
     eventname = session.get('eventname')
     if not username or username == "Guest":
-        flash('You must be logged in to agree with a post.')
+        flash('You must be logged in to vote on a post.')
         return redirect(url_for('login'))
 
-    User(username).vote_on_aifnode(aifnode_id, eventname, "Agree")
+    User(username).vote_on_aifnode(aifnode_id, eventname, vote_type)
 
-    flash('Agreed with inode in event "' + eventname + '"')
+    flash('Voted "' + vote_type + '" on inode in event "' + eventname + '"')
     return redirect(request.referrer)
 
 @app.route('/<inode_id>/rename')
@@ -212,33 +212,6 @@ def rename_I_Node(inode_id):
     newTitle = request.form['new-title']
     rename_iNode(aifnode_id,newTitle)
 
-    return redirect(request.referrer)
-
-@app.route('/disagree_with_aifnode/<aifnode_id>')
-def disagree_with_aifnode(aifnode_id):
-    username = session.get('username')
-    eventname = session.get('eventname')
-
-    if not username or username == "Guest":
-        flash('You must be logged in to disagree with a post.')
-        return redirect(url_for('login'))
-
-    User(username).vote_on_aifnode(aifnode_id, eventname, "Disagree")
-
-    flash('Disagreed with aifnode in event "' + eventname + '"')
-    return redirect(request.referrer)
-
-@app.route('/undecided_on_aifnode/<aifnode_id>')
-def undecided_on_aifnode(aifnode_id):
-    username = session.get('username')
-    eventname = session.get('eventname')
-    if not username or username == "Guest":
-        flash('You must be logged in to follow a post.')
-        return redirect(url_for('login'))
-
-    User(username).vote_on_aifnode(aifnode_id, eventname, "Undecided")
-
-    flash('Undecided on post in event "' + eventname + '"')
     return redirect(request.referrer)
 
 @app.route('/<aifnode_id>/delete')

@@ -10,9 +10,9 @@
             <a href="#vote-menu{{loop.index}}">vote</a>
             <div id="vote-menu{{loop.index}}" class="vote-anchor"><p><form action="{{ url_for('change_event') }}" method="post">
                     In event {{session.eventname}}<br> Change event to: <input type="text" name="event"></input><input type="submit" value="Submit"></form></p>
-                <a href="{{ url_for('agree_with_aifnode', aifnode_id=row.aifnode.id) }}">agree</a><br>
-                <a href="{{ url_for('disagree_with_aifnode', aifnode_id=row.aifnode.id) }}">disagree</a><br>
-                <a href="{{ url_for('undecided_on_aifnode', aifnode_id=row.aifnode.id) }}">undecided</a><br>
+                <a href="{{ url_for('vote_on_aifnode', aifnode_id=row.aifnode.id, vote_type='Agree') }}">agree</a><br>
+                <a href="{{ url_for('vote_on_aifnode', aifnode_id=row.aifnode.id, vote_type='Disagree') }}">disagree</a><br>
+                <a href="{{ url_for('vote_on_aifnode', aifnode_id=row.aifnode.id, vote_type='Undecided') }}">undecided</a><br>
             </div>
         </div>
   {% else %}
