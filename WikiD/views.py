@@ -9,6 +9,8 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     aifNodes = get_aifNodes()
+    logged_in_user = User(session.get('username'))
+    feed = logged_in_user.get_user_feed()
     return render_template('index.html', aifnodes=aifNodes)
 
 def init_rest_interface(cfg, flask_webapp):
@@ -135,6 +137,7 @@ def aifNode(aifnode_id):
     supported_nodes = aifnode.supported
     opposed_nodes = aifnode.opposed
     user_vote = aifnode.user_vote
+    activity_feed = aifnode.activity_feed
     return render_template('aifnode.html', aifnode=aifnode,supporting_nodes=supporting_nodes,supported_nodes=supported_nodes,opposing_nodes=opposing_nodes,opposed_nodes=opposed_nodes,agree_votes=agree_votes,disagree_votes=disagree_votes,undecided_votes=undecided_votes,user_vote=user_vote)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -233,6 +236,7 @@ def profile(username):
 
     user_being_viewed = User(user_being_viewed_username)
     aifnodes = user_being_viewed.get_recent_posts()
+    feed = user_being_viewed.get_user_feed()
 
     similar = []
     common = []

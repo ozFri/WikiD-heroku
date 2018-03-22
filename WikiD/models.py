@@ -101,6 +101,7 @@ class AIFNode:
         self.disagreeing = self.get_votes("Disagree")
         self.undecided = self.get_votes("Undecided")
         self.user_vote = self.user_vote()
+        self.activity_feed = self.get_activity_feed()
 
     def get_neighbours(self,inference):
         reltype={"supporting": ("supports","-[:SArc]->"),
@@ -135,6 +136,16 @@ class AIFNode:
         """
         return graph.run(query).evaluate()
 
+    def get_activity_feed(self):
+        query = """
+        MATCH (n) WHERE n.id = {node_id}
+        MATCH (n),(latest) WHERE (n)-[:ACTIVITY_FEED]->(latest:FeedItem)
+        MATCH (latest)-[:ACTIVITY_FEED_NEXT*""" + '0' + """..""" + '100' + """]->(item:FeedItem)
+        MATCH (item)-[:TARGET]->(target)
+        MATCH (item)-[:ACTOR]->(actor)
+        RETURN DISTINCT item, actor, target
+        """
+        return graph.run(query,node_id=self.id).evaluate()
 
     def delete(self):
         graph.run("""MATCH (n) where n.id="""+'"'+self.id+'"'+""" DETACH DELETE n""")
