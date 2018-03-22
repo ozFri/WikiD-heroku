@@ -102,6 +102,29 @@ class User:
 
         return graph.run(query, username=self.username)
 
+    def get_user_feed(self):
+        query = """
+        MATCH (n),(u) WHERE (u:User)-[:FOLLOWS]-(n)
+        AND u.username={username}
+        MATCH (n),(latest) WHERE (n)-[:ACTIVITY_FEED]->(latest:FeedItem)
+        MATCH (latest)-[:ACTIVITY_FEED_NEXT*""" + '0' + """..""" + '100' + """]->(item:FeedItem)
+        MATCH (item)-[:TARGET]->(target)
+        MATCH (item)-[:ACTOR]->(actor)
+        RETURN DISTINCT item, actor, target
+        """
+        return graph.run(query,username=self.username).evaluate()
+    def get_news_feed(self):
+        query = """
+        MATCH (n) 
+        WHERE (u:User)-[:FOLLOWS]-(n)
+        MATCH (n)-[:ACTIVITY_FEED]->(latest:FeedItem)
+        MATCH (latest)-[:ACTIVITY_FEED_NEXT*' + skip + '..' + end + ']->(item:FeedItem)
+        MATCH (item)-[:TARGET]->(target)
+        MATCH (item)-[:ACTOR]->(actor)
+        RETURN DISTINCT item, actor, target
+        """
+        return graph.run(query).evaluate()
+
     def get_similar_users(self):
         # Find three users who are most similar to the logged-in user
         # based on tags they've both blogged about.
