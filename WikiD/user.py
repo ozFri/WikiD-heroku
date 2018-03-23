@@ -1,6 +1,6 @@
 from py2neo import Graph, Node, Relationship, authenticate
 from passlib.hash import bcrypt
-from .models import timestamp, date, create_new_event,create_new_vote, get_aifNode_by_title, get_aifNode
+from .models import timestamp, date, create_new_event,create_new_vote, get_aifNode_by_title, get_aifNode, create_feed_item, add_item_to_feed
 from .models import graph
 from datetime import datetime
 import uuid
@@ -33,20 +33,27 @@ class User:
 
     def add_S_Node(self,schema,source,target):
         user= self.find()
+        sourceNode=get_aifNode_by_title(source)
+        targetNode=get_aifNode_by_title(target)
         schemaNode= Node(
                 "SNode",
                 id=str(uuid.uuid4()),
                 schema=schema,
                 source=source,
-                source_id=get_aifNode_by_title(source).properties["id"],
+                source_id=sourceNode.properties["id"],
                 target=target,
-                target_id=get_aifNode_by_title(target).properties["id"],
+                target_id=targetNode.properties["id"],
                 title=source+" "+schema+" "+target,
                 timestamp=timestamp(),
                 date=date()
                 )
         authorship = Relationship(user, "PUBLISHED", schemaNode)
         graph.create(authorship)
+        graph.create(Relationship(user, ":FOLLOWS", schemaNode))
+        feedItem = create_feed_item(user,schemaNode,"PUBLISHED")
+        add_item_to_feed(feedItem,schemaNode)
+        add_item_to_feed(feedItem,sourceNode)
+        add_item_to_feed(feedItem,targetNode)
         return schemaNode.properties["id"]
 
     def add_I_Node(self, title):
@@ -60,6 +67,10 @@ class User:
         )
         rel = Relationship(user, "PUBLISHED", iNode)
         graph.create(rel)
+        graph.create(Relationship(user, "FOLLOWS", iNode))
+        feedItem = create_feed_item(user,iNode,"PUBLISHED")
+        add_item_to_feed(feedItem,iNode)
+        return iNode.properties["id"]
 
     #Tags Stuff
         #tags = [x.strip() for x in tags.lower().split(',')]
@@ -91,6 +102,9 @@ class User:
             else:
                 event = graph.find_one("ENode", "name", event_name)
             create_new_vote(user, vote_type, event, aifNode)
+        graph.create(Relationship(user, "FOLLOWS", aifNode))
+        feedItem = create_feed_item(user,aifNode,"VOTED '"+vote_type.upper()+"'")
+        add_item_to_feed(feedItem,iNode)
 
     def get_recent_posts(self):
         query = """

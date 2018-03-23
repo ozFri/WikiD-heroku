@@ -24,7 +24,9 @@ def create_new_vote(user, vote_type, event, node):
     graph.merge(Relationship(user, "VOTED", vote))
     graph.merge(Relationship(vote, "APPLIES_TO", event))
     graph.merge(Relationship(vote, "APPLIES_TO", node))
+    graph.merge(Relationship(user, ":FOLLOWS", node))
     return event
+
 def create_new_event(user, event_name="General"):
     event = Node(
         "ENode",
@@ -36,6 +38,33 @@ def create_new_event(user, event_name="General"):
     graph.create(event)
     graph.merge(Relationship(user, "OBSERVES", event))
     return event
+
+def add_item_to_feed(feedItem,node):
+    query = """
+    MATCH (node)
+    WHERE node.id={nodeid}
+    OPTIONAL MATCH (node)-[r:ACTIVITY_FEED]-(secondlatestitem)
+    DELETE r
+    RETURN secondlatestitem
+    """
+    oldfeed = graph.run(query,nodeid=node['id']).evaluate()
+    graph.create(Relationship(node,"ACTIVITY_FEED",feedItem))
+    if oldfeed is not None:
+        graph.create(Relationship(feedItem,"ACTIVITY_FEED_NEXT",oldfeed))
+
+def create_feed_item(actor,target,label):
+    feedItem= Node(
+            "FeedItem",
+            id=str(uuid.uuid4()),
+            actor=actor['username'],
+            actor_id=actor['<id>'],
+            target=target['title'],
+            target_id=target['id'],
+            label=label,
+            timestamp=timestamp(),
+            date=date()
+            )
+    return feedItem
 
 def create_new_schema_relationship(source, schemaID, target):
     sourceNode=get_aifNode_by_title(source)

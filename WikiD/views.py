@@ -1,4 +1,4 @@
-from .models import AIFNode, get_aifNodes, get_aifNode, create_new_schema_relationship,rename_iNode
+from .models import AIFNode, get_aifNodes, get_aifNode, rename_iNode,create_new_schema_relationship
 from flask import Flask, request, session, redirect, url_for, render_template, flash
 from .user import User
 
@@ -11,7 +11,7 @@ def index():
     aifNodes = get_aifNodes()
     logged_in_user = User(session.get('username'))
     feed = logged_in_user.get_user_feed()
-    return render_template('index.html', aifnodes=aifNodes)
+    return render_template('index.html', aifnodes=aifNodes, feed=feed)
 
 def init_rest_interface(cfg, flask_webapp):
     """
