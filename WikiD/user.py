@@ -49,7 +49,7 @@ class User:
                 )
         authorship = Relationship(user, "PUBLISHED", schemaNode)
         graph.create(authorship)
-        graph.create(Relationship(user, ":FOLLOWS", schemaNode))
+        graph.create(Relationship(user, "FOLLOWS", schemaNode))
         feedItem = create_feed_item(user,schemaNode,"PUBLISHED")
         add_item_to_feed(feedItem,schemaNode)
         add_item_to_feed(feedItem,sourceNode)
@@ -102,9 +102,9 @@ class User:
             else:
                 event = graph.find_one("ENode", "name", event_name)
             create_new_vote(user, vote_type, event, aifNode)
-        graph.create(Relationship(user, "FOLLOWS", aifNode))
+        graph.merge(Relationship(user, "FOLLOWS", aifNode))
         feedItem = create_feed_item(user,aifNode,"VOTED '"+vote_type.upper()+"'")
-        add_item_to_feed(feedItem,iNode)
+        add_item_to_feed(feedItem,aifNode)
 
     def get_recent_posts(self):
         query = """
@@ -126,7 +126,7 @@ class User:
         MATCH (item)-[:ACTOR]->(actor)
         RETURN DISTINCT item, actor, target
         """
-        return graph.run(query,username=self.username).evaluate()
+        return graph.run(query,username=self.username)
     def get_news_feed(self):
         query = """
         MATCH (n) 

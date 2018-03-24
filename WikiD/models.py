@@ -24,7 +24,7 @@ def create_new_vote(user, vote_type, event, node):
     graph.merge(Relationship(user, "VOTED", vote))
     graph.merge(Relationship(vote, "APPLIES_TO", event))
     graph.merge(Relationship(vote, "APPLIES_TO", node))
-    graph.merge(Relationship(user, ":FOLLOWS", node))
+    graph.merge(Relationship(user, "FOLLOWS", node))
     return event
 
 def create_new_event(user, event_name="General"):
@@ -64,6 +64,8 @@ def create_feed_item(actor,target,label):
             timestamp=timestamp(),
             date=date()
             )
+    graph.create(Relationship(feedItem, "TARGET", target))
+    graph.create(Relationship(feedItem, "ACTOR", actor))
     return feedItem
 
 def create_new_schema_relationship(source, schemaID, target):

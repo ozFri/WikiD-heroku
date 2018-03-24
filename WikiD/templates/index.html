@@ -21,6 +21,9 @@
       Sort
   </button>
 {% include "display_posts.html" %}
+{% if session.username %}
+{% include "display_feed.html" %}
+{% endif %}
 </div>
 
 {% endblock %}
