@@ -29,13 +29,15 @@
             <ul class="nav navbar-nav navbar-center">
                     {% endif %}
                     <li><a href="{{ url_for('index') }}">Home</a></li>  
-                    {% if not session.username %}
                     <li> <a href="{{ url_for('register') }}">Register</a> </li>
+                    {% if not session.username %}
                     <li> <a href="{{ url_for('login') }}">Login</a> </li>
                     {% else %}
                     <li> <a href="{{ url_for('profile', username=session.username) }}">Profile</a> </li>
                     <li> <a href="{{ url_for('logout') }}">Logout</a> </li>
                     {% endif %}
+
+                    <a href="https://github.com/ozFri/WikiD-heroku">View on GitHub</a>
                 <!--li><a href="#">About</a></li-->
             </ul>
         </div>

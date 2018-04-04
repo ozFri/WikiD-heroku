@@ -39,11 +39,7 @@ digraph graph_name {
     labelangle = 70
   ];
 
-  subgraph cluster1 {
-      
-  }
   subgraph cluster2 {
-      
   }
   // node define
     User [];
@@ -51,13 +47,17 @@ digraph graph_name {
     SNode [];
     ENode [];
     Vote [];
+    Argument [label= "argument | type" shape= "record"];
 
   // edge define
     User->INode [label = "Author"]
     User->SNode [label = "Author"]
     User->ENode [label = "Observes"]
+    INode->Argument
+    SNode->Argument
     INode->SNode
     SNode->INode
+    SNode->SNode
     User->Vote
     Vote->ENode
     Vote->INode
