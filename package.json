@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/ozFri/WikiD-heroku#readme",
   "devDependencies": {
-    "bower": "^1.8.0"
+    "bower": "^1.8.4"
   }
 }
