@@ -165,7 +165,7 @@ class User:
         RETURN COUNT(DISTINCT post) AS likes, COLLECT(DISTINCT tag.name) AS tags
         """
 
-        return graph.run(query, they=other.username, you=self.username)[0]
+        return graph.run(query, they=other.username, you=self.username)
 
     def register_validation(flash_func, user_name, password):
         if len(user_name) < 1:

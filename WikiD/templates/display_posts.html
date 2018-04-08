@@ -2,7 +2,7 @@
   {% for row in aifnodes %}
     <li>
         <b><a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.aifnode.id)}}">{{ row.aifnode.title }}</a></b>
-        {% if request.path != "/profile"+session.username %}
+        {% if request.path != "/profile/"+session.username %}
     by <a href="{{ url_for('profile', username=row.username) }}">{{ row.username }}</a>
         {% endif %}
     	on <span class="date">{{ row.aifnode.date }}</span>
