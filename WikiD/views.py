@@ -82,6 +82,9 @@ def init_rest_interface(cfg, flask_webapp):
 
         flask_webapp.f = f  # assign decorated function
 
+# @app.route('/<aifnode_id>/add-tag', methods=['POST','GET'])
+# def add_tag(aifnode_id):
+
 @app.route('/<aifnode_id>/add-Snode', methods=['POST','GET'])
 def add_S_node(aifnode_id):
     username = session.get('username')
@@ -228,6 +231,11 @@ def delete_aifnode(aifnode_id):
     aifnode.delete()
     flash('Deleted Node')
     return redirect("/index")
+
+@app.route('/explore')
+def explore():
+    aifNodes = get_aifNodes()
+    return render_template('explore.html', aifnodes=aifNodes)
 
 @app.route('/profile/<username>')
 def profile(username):

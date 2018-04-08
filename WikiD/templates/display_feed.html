@@ -1,11 +1,11 @@
   <ul class="list">
   {% if feed is not none %}
-  {% for row in feed %}
+  {% for row in feed|reverse %}
     <li>
-        <b><a href="{{ url_for('profile', username=row.actor.username) }}">{{ row.actor.username }}</a></b>
+        <b><a href="{{ url_for('profile', username=row.actor.username) }}">{{ "You" if session.username==row.actor.username else row.actor.username }}</a></b>
         {{ row.item.label.lower() }}
-    <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.target.id)}}">{{ row.target.title }}</a>
-    	on <span class="date">{{ row.item.date }}</span>
+    <a class="feed-title" href="{{ url_for('aifNode', aifnode_id=row.target.id)}}">{{ row.target.title }}</a>
+    	on <span class="feed-date">{{ row.item.date }}</span>
   {% endfor %}
   {% else %}
     <li>there aren't any posts yet!

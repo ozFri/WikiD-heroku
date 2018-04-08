@@ -2,7 +2,6 @@
 {% block body %}
 
 <h2>Home</h2>
-<div id="aifnodes">
   {% if session.username %}
     <h3>State your mind</h3>
     <form action="{{ url_for('add_I_Node') }}" method="post">
@@ -16,14 +15,9 @@
 
 <br>
 
-<h3>Today's Recent Statements</h3>
-  <button class="sort" data-sort="aifnode-title">
-      Sort
-  </button>
-{% include "display_posts.html" %}
+<h3>Feed</h3>
 {% if session.username %}
 {% include "display_feed.html" %}
 {% endif %}
-</div>
 
 {% endblock %}

@@ -68,6 +68,8 @@ def create_feed_item(actor,target,label):
     graph.create(Relationship(feedItem, "ACTOR", actor))
     return feedItem
 
+# def add_tag_to_aifnode(aifNode, tag):
+
 def create_new_schema_relationship(source, schemaID, target):
     sourceNode=get_aifNode_by_title(source)
     targetNode=get_aifNode_by_title(target)
