@@ -20,7 +20,6 @@ pafy==0.5.4
 passlib==1.7.1
 pipreqs==0.4.9
 py2neo==3.1.2
-pycairo==1.16.2
 pycparser==2.18
 pyparsing==2.2.0
 pyxdg==0.26
@@ -31,3 +30,4 @@ virtualenv==15.1.0
 Werkzeug==0.14.1
 WTForms==2.1
 yarg==0.1.9
+stream-framework[redis]==1.4.0
