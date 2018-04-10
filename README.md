@@ -1,6 +1,6 @@
 # WikiD - a wicked problem solver
 
-##Etymology
+## Etymology
 
 WikiD -  WikiDiscussion or WikiDiyun - ויקידיון  - WikiDiscussion just in hebrew, 
 Wiki - means [fast](http://wiki.c2.com/?WikiWiki), so essentially a faster way to discuss stuff
@@ -40,11 +40,28 @@ number of people involved with them, may help solve [wicked problems](https://en
 
 >To Be Continued
 
+## Related Projects
+
+WikiD is keeping in touch with a community of similar projects gathered as a sidequest by project Gruff's maintainer.
+The community aims to write a whitepaper defining an standard system design addressing the big problem of a converging or "canonical" debate.
+The various projects' prototypes help test different designs and elements in the system.
+
+Among these projects are:
+
+* [DebateMap](https://github.com/Venryx/DebateMap) - _Tree-based mapping of beliefs, arguments, and evidence._ [https://debatemap.live](https://debatemap.live)
+* Gruff - "Wikipedia for Debates" [server](https://github.com/bigokro/gruff-server) and [web](https://github.com/bigokro/gruff-web)
+* [ReasonScore](https://github.com/ReasonScore/ReasonScore) - _Reason Score is a widget you can put on your website that heps you have an open source calculated fact check. You can see more about it and a working example at_  [SettleIt.org](http://SettleIt.org) 
+
+Gruff's round table (not an official name) is also in contact with [Democracy Earth Foundation](https://www.democracy.earth/) Ecosystem.
+
+Besides that, there are older running similiar projects and research work, [DegateGraph](debategraph.org) and [Arg-Tech](http://www.arg-tech.org/)
+
+
 ## How does it work?
 
 >To Be Continued
 
-###Hint
+### Hint
 This repository started as a fork of the very nice tutorial [neo4j-flask](https://nicolewhite.github.io/neo4j-flask/) by Nicole White, so you may check it
 if you need a hint to see where is north and where is up before getting into the mess
 
@@ -82,6 +99,5 @@ virtualenv venv
 pip install -r requirements.txt
 python run.py
 ```
-
-
 [http://localhost:5000](http://localhost:5000)
+
