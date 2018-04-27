@@ -1,0 +1,30 @@
+<nav>
+    <ul style="display: flex;">
+        <li><a href="{{ url_for('index') }}"><h1>WikiD</h1></a> 
+            <li><p><a href="{{ url_for('explore')}}"><h4>Explore</h4></a></p>
+                <li><span>
+            {% if session.username %}
+            Logged in as <a href="{{ url_for('profile', username=session.username) }}">{{ session.username }}</a> 
+            <span id="event">Event:{{session.eventname}}</span>
+            <span id="select-event">(Select Event)</span>
+        </span>
+        {% endif %}
+        <li><a href="{{ url_for('index') }}">Home</a></li>  
+        <li> <a href="{{ url_for('register') }}">Register</a> </li>
+        {% if not session.username %}
+        <li> <a href="{{ url_for('login') }}">Login</a> </li>
+        {% else %}
+        <li> <a href="{{ url_for('profile', username=session.username) }}">Profile</a> </li>
+        <li> <a href="{{ url_for('logout') }}">Logout</a> </li>
+        {% endif %}
+
+        <!--li><a href="#">About</a></li-->
+    <li><form>
+        <div>
+            <input type="text" placeholder="Search">
+        </div>
+        <button class="btn btn-outline" type="submit">Submit</button>
+    </form>
+    <li><a href="https://github.com/ozFri/WikiD-heroku">View on GitHub</a>
+    </ul>
+</nav>
