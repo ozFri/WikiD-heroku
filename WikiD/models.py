@@ -5,12 +5,10 @@ from datetime import datetime
 import os
 import uuid
 
-user = "app45980694-1SqesO"
-password ="b.2Wbuj0oq2sYy.zJWPkmzpJi7O3G4U"
+from . import config
 
-authenticate("hobby-hankpoiekhacgbkegaaijpal.dbs.graphenedb.com:24780", user, password)
-graph = Graph("https://hobby-hankpoiekhacgbkegaaijpal.dbs.graphenedb.com:24780/db/data", bolt = False, secure=True)
-
+authenticate(config.db_host_port, config.user, config.password)
+graph = Graph(config.db_url, bolt = False, secure=config.is_secured)
 
 def create_new_vote(user, vote_type, event, node):
     vote = Node(
