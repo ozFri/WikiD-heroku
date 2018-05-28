@@ -1,15 +1,13 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<h1 class="h1 space-centered">WikiD</h1>
+<h1 class="serif flex justify-around">WikiD</h1>
   {% if session.username %}
     <h3>State your mind</h3>
-    <form action="{{ url_for('add_I_Node') }}" method="post">
-        <dl class="flex">
+    <form class="flex mb2" action="{{ url_for('add_I_Node') }}" method="post">
             <dt>Statement:</dt>
-            <dd><input class="search" type="text" size="30" name="title"></dd>
+            <dd><input class="flex-auto h2 m0 field rounded-left" type="text" size="30" name="title"></dd>
             <dt><button class="btn btn-outline" type="submit">Share</button></dt>
-        </dl>
     </form>
   {% endif %}
 

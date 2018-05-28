@@ -1,5 +1,5 @@
 from .models import AIFNode, get_aifNodes, get_aifNode, rename_iNode,create_new_schema_relationship
-from flask import Flask, request, session, redirect, url_for, render_template, flash
+from flask import Flask, request, session, redirect, url_for, render_template, flash 
 from .user import User
 
 app = Flask(__name__)
@@ -232,11 +232,6 @@ def delete_aifnode(aifnode_id):
     flash('Deleted Node')
     return redirect("/index")
 
-@app.route('/explore')
-def explore():
-    aifNodes = get_aifNodes()
-    return render_template('explore.html', aifnodes=aifNodes)
-
 @app.route('/profile/<username>')
 def profile(username):
     logged_in_username = session.get('username')
@@ -264,3 +259,8 @@ def profile(username):
         similar=similar,
         common=common
     )
+
+@app.route('/search/<searchterm>')
+def search(searchterm):
+
+    return searchterm

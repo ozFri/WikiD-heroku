@@ -3,18 +3,23 @@
     <head>
         <title>WikiD</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='reset.css') }}">
-        <link href="https://unpkg.com/ace-css/css/ace.min.css" rel="stylesheet">
+        <!--link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='reset.css') }}"-->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='ace.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+        <script src="{{ url_for('static', filename='scripts/libs/require.js') }}"></script>
+        <script src="{{ url_for('static', filename='scripts/libs/jquery.js') }}"></script>
+        <script src="{{ url_for('static', filename='scripts/src/common.js') }}"></script>
     </head>
     <body style="display:grid;">
-        <div>
             {% include 'navbar.html' %}
+        <div id="randomuser">
+        </div>
             {% for message in get_flashed_messages() %}
             <div class="stripe">{{ message }}</div>
             {% endfor %}
-        <div class="small-margin octagon">
+        <div class="small-margin rounded sans">
             {% block body %}{% endblock %}
         </div>
+        <script src="{{ url_for('static', filename='scripts/dist/main.js') }}"></script>
     </body>
 </html>

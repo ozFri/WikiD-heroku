@@ -1,0 +1,11 @@
+<div class="bg-darken-1 p2 rounded">
+<script src="{{ url_for('static', filename='scripts/wonderbar.js') }}"></script>
+<form class="wonderbar-helper">
+    <div class="wonderbar-main">
+        <input class="inline-grid h3" id="wonderbar-input" type="text" placeholder="Search" required>
+    <button class="btn btn-outline inline-grid" type="submit">Search</button>
+    </div>
+    <div id="suggestions"></div> 
+</form>
+{% include 'actions.html' %}
+</div>

@@ -4,41 +4,34 @@ body {
   grid-template-rows: 15% 60% 25%;
 }
 
-
-h1 {font-size: 2rem;
-float:auto;}
-h2 {font-size: 1.5rem;}
-h3 {font-size: 1.25rem;}
-h4 {font-size: 1rem;}
-h5 {font-size: .875rem;}
-h6 {font-size: .75rem;}
-
-.h1 { font-size: var(--h1) }
-.h2 { font-size: var(--h2) }
-.h3 { font-size: var(--h3) }
-.h4 { font-size: var(--h4) }
-.h5 { font-size: var(--h5) }
-.h6 { font-size: var(--h6) }
-
-:root {
-  --h1: 2rem;
-  --h2: 1.5rem;
-  --h3: 1.25rem;
-  --h4: 1rem;
-  --h5: .875rem;
-  --h6: .75rem;
+a:visited {
+    text-decoration: none;
 }
-.space-centered {
-    position: relative;
-    float: left;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+
+a:link:hover {
+    text-decoration: underline;
 }
+
+a:active {
+    text-decoration: underline;
+}
+
+a:link{ 
+    text-decoration:none;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Myriad Pro", Ubuntu, "Helvetica Neue", sans-serif }
+.serif { font-family: Georgia, serif }
+.monospace { font-family: Menlo, Monaco, Consolas, "Courier New", monospace }
+
 .stripe {
    background:#333; 
    color:#eee;
    border:2px solid #eee;
+}
+.brand
+{
+
 }
 .small-margin { margin: 1% auto;
                width: 95%;
@@ -60,6 +53,42 @@ h6 {font-size: .75rem;}
         -moz-border-radius:32px;
         -webkit-border-radius:32px;	
         border-radius:32px;
+}
+
+
+.wonderbar-main{
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 3;
+}
+.wonderbar-helper{
+  display:grid;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: auto auto auto;
+}
+
+.wonderbar-buttons{
+  display:none;
+}
+
+form:valid ~ .wonderbar-buttons {
+    display: block;
+}
+
+.grid{
+    display: grid;
+    grid-gap: 20px;
+}
+
+.grid-2cols{
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-gap: 20px;
+}
+
+.inline-grid {
+    display:inline-grid;
 }
 
 .octagon {

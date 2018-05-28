@@ -1,0 +1,25 @@
+digraph{
+userA -> create -> aifNode ;
+userB -> aifNode [label="follows"] ;
+create -> "aifNode Stream" [label="sends notification"];
+create -> "userA Stream" [label="sends notification"];
+
+}
+
+/* Web feeds:
+    Node:
+        Whenever a new data is added to the node
+        Whenever a new action is performed regarding the node
+            Vote
+            Permise
+
+    User:
+        Whenever the user does something
+        Whenever the user adds a node or data
+        Whenever a new data is added to a node
+        Whenever
+
+    User-Notifications:
+        Whenever a friend
+*/
+
