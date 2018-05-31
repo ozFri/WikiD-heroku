@@ -1,7 +1,19 @@
 {% extends "layout.html" %}
 {% block body %}
   <h2>Login</h2>
-	<form action="{{ url_for('login') }}" method="post">
+  <form action="{{ url_for('login') }}" method="post">
+      <div class="form-group">
+        <label for="username">User Name</label>
+        <input style="width:300px;" type="text" class="form-control" id="username" name="username">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input style="width:300px;" type="password" class="form-control" id="password" name="password">
+      </div>
+      <input type="submit" class="btn btn-outline-info" value="Login">
+    </form>
+
+	<!-- <form action="{{ url_for('login') }}" method="post">
         <dl>
             <dt>Username:</dt>
             <dd><input type="text" name="username"></dd>
@@ -9,5 +21,5 @@
             <dd><input type="password" name="password"></dd>
         </dl>
         <input type="submit" value="Login">
-	</form>
+	</form> -->
 {% endblock %}

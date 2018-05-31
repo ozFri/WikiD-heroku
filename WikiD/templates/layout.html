@@ -1,25 +1,49 @@
 <!doctype html>
+
 <html>
-    <head>
-        <title>WikiD</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!--link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='reset.css') }}"-->
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='ace.min.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-        <script src="{{ url_for('static', filename='scripts/libs/require.js') }}"></script>
-        <script src="{{ url_for('static', filename='scripts/libs/jquery.js') }}"></script>
-        <script src="{{ url_for('static', filename='scripts/src/common.js') }}"></script>
-    </head>
-    <body style="display:grid;">
-            {% include 'navbar.html' %}
-        <div id="randomuser">
+
+<head>
+    <title>WikiD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='reset.css') }}"-->
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='ace.min.css') }}"> -->
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}"> -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+    <!-- <script src="{{ url_for('static', filename='scripts/libs/require.js') }}"></script> -->
+    <!-- <script src="{{ url_for('static', filename='scripts/libs/jquery.js') }}"></script> -->
+    <!-- <script src="{{ url_for('static', filename='scripts/src/common.js') }}"></script> -->
+</head>
+
+<body>
+
+    {% include 'navbar.html' %}
+    <div class="container" >
+        <!-- <div id="randomuser"></div> -->
+
+        {% for message in get_flashed_messages() %}
+        <div class="stripe alert alert-danger alert-dismissible fade show" role="alert">{{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
         </div>
-            {% for message in get_flashed_messages() %}
-            <div class="stripe">{{ message }}</div>
-            {% endfor %}
+        {% endfor %}
         <div class="small-margin rounded sans">
             {% block body %}{% endblock %}
         </div>
-        <script src="{{ url_for('static', filename='scripts/dist/main.js') }}"></script>
-    </body>
+    </div>
+
+    
+
+    <script src="{{ url_for('static', filename='scripts/dist/main.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+
+
+</body>
+
 </html>
