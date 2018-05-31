@@ -21,8 +21,8 @@
     <div class="container" >
         <!-- <div id="randomuser"></div> -->
 
-        {% for message in get_flashed_messages() %}
-        <div class="stripe alert alert-danger alert-dismissible fade show" role="alert">{{ message }}
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+        <div class="stripe alert alert-{{category}} alert-dismissible fade show" role="alert">{{ message }}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>

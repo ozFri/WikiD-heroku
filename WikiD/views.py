@@ -90,7 +90,7 @@ def add_S_node(aifnode_id):
     username = session.get('username')
     eventname = session.get('eventname')
     if not username or username == "Guest":
-        flash('You must be logged in to agree with a post.')
+        flash('You must be logged in to agree with a post.','danger')
         return redirect(url_for('login'))
     aifnode = AIFNode(aifnode_id)
     aifnodes = get_aifNodes()
@@ -151,7 +151,7 @@ def register():
 
         if User.register_validation(flash, username, password):
             session['username'] = username
-            flash('Logged in.')
+            flash('Logged in.','success')
             return redirect(url_for('event'))
 
     return render_template('register.html')
@@ -163,11 +163,11 @@ def login():
         password = request.form['password']
 
         if not User(username).verify_password(password):
-            flash('Invalid login.')
+            flash('Invalid login.','danger')
         else:
             session['username'] = username
             session['eventname'] = "General"
-            flash('Logged in.')
+            flash('Logged in.','success')
             return redirect(url_for('index'))
 
     return render_template('login.html')
@@ -176,7 +176,7 @@ def login():
 def logout():
     session.pop('username', None)
     session.pop('eventname', None)
-    flash('Logged out.')
+    flash('Logged out.','primary')
     return redirect(url_for('index'))
 
 @app.route('/change_event', methods=['POST'])
@@ -189,7 +189,7 @@ def add_I_Node():
     title = request.form['title']
 
     if not title:
-        flash('You must give your post a title.')
+        flash('You must give your post a title.','primary')
     else:
         User(session['username']).add_I_Node(title)
 
@@ -200,12 +200,12 @@ def vote_on_aifnode(aifnode_id,vote_type):
     username = session.get('username')
     eventname = session.get('eventname')
     if not username or username == "Guest":
-        flash('You must be logged in to vote on a post.')
+        flash('You must be logged in to vote on a post.','danger')
         return redirect(url_for('login'))
 
     User(username).vote_on_aifnode(aifnode_id, eventname, vote_type)
 
-    flash('Voted "' + vote_type + '" on inode in event "' + eventname + '"')
+    flash('Voted "' + vote_type + '" on inode in event "' + eventname + '"','primary')
     return redirect(request.referrer)
 
 @app.route('/<inode_id>/rename')
@@ -213,7 +213,7 @@ def rename_I_Node(inode_id):
     username = session.get('username')
     eventname = session.get('eventname')
     if not username or username == "Guest":
-        flash('You must be logged in to agree with a post.')
+        flash('You must be logged in to agree with a post.','danger')
         return redirect(url_for('login'))
     newTitle = request.form['new-title']
     rename_iNode(aifnode_id,newTitle)
@@ -225,11 +225,11 @@ def delete_aifnode(aifnode_id):
     username = session.get('username')
     eventname = session.get('eventname')
     if not username or username == "Guest":
-        flash('You must be logged in to delete a post.')
+        flash('You must be logged in to delete a post.','danger')
         return redirect(url_for('login'))
     aifnode = AIFNode(aifnode_id)
     aifnode.delete()
-    flash('Deleted Node')
+    flash('Deleted Node','primary')
     return redirect("/index")
 
 @app.route('/profile/<username>')
