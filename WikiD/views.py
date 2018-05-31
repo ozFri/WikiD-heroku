@@ -1,6 +1,8 @@
 from .models import AIFNode, get_aifNodes, get_aifNode, rename_iNode,create_new_schema_relationship
-from flask import Flask, request, session, redirect, url_for, render_template, flash 
+from flask import Flask, request, session, redirect, url_for, render_template, flash,jsonify
 from .user import User
+import requests
+from . import config
 
 app = Flask(__name__)
 
@@ -96,7 +98,7 @@ def add_S_node(aifnode_id):
     aifnodes = get_aifNodes()
     #the type of the schema
     schema = request.form['schema']
-    #the title of the target node 
+    #the title of the target node
     targetIndex = request.form.get('target',None)
     #the title of the source node
     sourceIndex = request.form.get('source',None)
@@ -106,20 +108,20 @@ def add_S_node(aifnode_id):
     if targetIndex is not None:
         target = aifnodes[int(targetIndex)-1]['aifnode']['title']
         source = aifnode.title
-    elif sourceIndex is not None:    
+    elif sourceIndex is not None:
         source = aifnodes[int(sourceIndex)-1]['aifnode']['title']
         target = aifnode.title
-    #elif newTarget is not None:    
+    #elif newTarget is not None:
     #    User(session['username']).add_I_Node(newTarget)
     #    target = newTarget = request.form['new-target']
     #    source = aifnode
-    #elif newSource is not None:    
+    #elif newSource is not None:
     #    User(session['username']).add_I_Node(newSource)
     #    source = newSource = request.form['new-source']
     #    target = aifnode
     schemaID = User(session['username']).add_S_Node(schema,source,target)
     if (target and source and schemaID) is not None:
-        create_new_schema_relationship(source,schemaID,target)  
+        create_new_schema_relationship(source,schemaID,target)
     return redirect(request.referrer)
 
 @app.route('/event')
@@ -264,3 +266,15 @@ def profile(username):
 def search(searchterm):
 
     return searchterm
+
+@app.route('/graphql',methods=['GET'])
+def getGraphql():
+    query=request.args.get('query')
+
+    #JSON object
+    json={"query":query}
+
+    restAPI=requests.post(config.graphql_url,json=json,headers=config.headers)
+
+
+    return jsonify(restAPI.json()['data']);
