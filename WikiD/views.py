@@ -96,7 +96,7 @@ def add_S_node(aifnode_id):
     aifnodes = get_aifNodes()
     #the type of the schema
     schema = request.form['schema']
-    #the title of the target node 
+    #the title of the target node
     targetIndex = request.form.get('target',None)
     #the title of the source node
     sourceIndex = request.form.get('source',None)
@@ -106,20 +106,21 @@ def add_S_node(aifnode_id):
     if targetIndex is not None:
         target = aifnodes[int(targetIndex)-1]['aifnode']['title']
         source = aifnode.title
-    elif sourceIndex is not None:    
+    elif sourceIndex is not None:
         source = aifnodes[int(sourceIndex)-1]['aifnode']['title']
         target = aifnode.title
-    #elif newTarget is not None:    
+    #elif newTarget is not None:
     #    User(session['username']).add_I_Node(newTarget)
     #    target = newTarget = request.form['new-target']
     #    source = aifnode
-    #elif newSource is not None:    
+    #elif newSource is not None:
     #    User(session['username']).add_I_Node(newSource)
     #    source = newSource = request.form['new-source']
     #    target = aifnode
-    schemaID = User(session['username']).add_S_Node(schema,source,target)
-    if (target and source and schemaID) is not None:
-        create_new_schema_relationship(source,schemaID,target)  
+    if target != source:
+        schemaID = User(session['username']).add_S_Node(schema,source,target)
+        if (target and source and schemaID) is not None:
+            create_new_schema_relationship(source,schemaID,target)
     return redirect(request.referrer)
 
 @app.route('/event')
@@ -132,6 +133,7 @@ def event():
 def aifNode(aifnode_id):
     aifnode = AIFNode(aifnode_id)
     aifnodes = aifnode.aifnodes
+    tags = aifnode.tags
     agree_votes = aifnode.agreeing
     disagree_votes = aifnode.disagreeing
     undecided_votes = aifnode.undecided
