@@ -133,7 +133,6 @@ def event():
 def aifNode(aifnode_id):
     aifnode = AIFNode(aifnode_id)
     aifnodes = aifnode.aifnodes
-    tags = aifnode.tags
     agree_votes = aifnode.agreeing
     disagree_votes = aifnode.disagreeing
     undecided_votes = aifnode.undecided
