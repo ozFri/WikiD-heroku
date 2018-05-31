@@ -152,7 +152,7 @@ class AIFNode:
         if username is None:
             return
         query = """
-        MATCH (User{username:"""+'"'+session["username"]+'"'+"""})-[OBSERVES]->(ENode{name:"""+'"'+session["eventname"]+'"'+"""})-[vote]->(SNode{title:"""+'"'+self.title+'"'+"""})
+        MATCH (User{username:"""+'"'+session["username"]+'"'+"""})-[OBSERVES]->(ENode{name:"""+'"'+session["eventname"]+'"'+"""})-[vote]->(SNode{title:"""+'"'+self.title.replace('"','\\"')+'"'+"""})
         RETURN vote
         """
         return graph.run(query)
@@ -162,7 +162,7 @@ class AIFNode:
         if eventname is None:
             eventname = "General"
         query = """
-        MATCH (vote) WHERE (:User)-[:VOTED]->(vote:VNode)-[:APPLIES_TO]->(:ENode{name:"""+'"'+eventname+'"'+"""}) AND (vote{name:"""+'"'+vote_type+'"'+"""})-[:APPLIES_TO]->({title:"""+'"'+self.title+'"'+"""})
+        MATCH (vote) WHERE (:User)-[:VOTED]->(vote:VNode)-[:APPLIES_TO]->(:ENode{name:"""+'"'+eventname+'"'+"""}) AND (vote{name:"""+'"'+vote_type+'"'+"""})-[:APPLIES_TO]->({title:"""+'"'+self.title.replace('"','\\"')+'"'+"""})
         RETURN count(DISTINCT vote) as votes
         """
         return graph.run(query).evaluate()
