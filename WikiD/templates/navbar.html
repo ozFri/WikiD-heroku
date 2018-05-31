@@ -1,24 +1,43 @@
-<nav class="bg-aqua">
-    <div class="flex items-center justify-around pl3">
-        <a class="text-decoration-none serif" href="{{ url_for('index') }}"><h1>WikiD</h1></a> 
-        {% include 'wonderbar.html' %}
-        <span class="grid-2cols">
-        {% if session.username %}
-            Logged in as <a href="{{ url_for('profile', username=session.username) }}">{{ session.username }}</a> 
-            <span id="event">Event:{{session.eventname}}</span>
-            <span id="select-event">(Select Event)</span>
-        </span>
-        {% endif %}
-        <a href="{{ url_for('index') }}">Home</a>
-         <a href="{{ url_for('register') }}">Register</a> 
-        {% if not session.username %}
-         <a href="{{ url_for('login') }}">Login</a> 
-        {% else %}
-         <a href="{{ url_for('profile', username=session.username) }}">Profile</a> 
-         <a href="{{ url_for('logout') }}">Logout</a> 
-        {% endif %}
 
-        <!--li><a href="#">About</a></li-->
-    <a href="https://github.com/ozFri/WikiD-heroku">View on GitHub</a>
-    </div>
-</nav>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="margin-bottom: 50px;">
+        <div class="container">
+          <a class="navbar-brand" href="{{ url_for('index') }}">WikiD</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+                <!-- {% include 'wonderbar.html' %} -->
+            <ul class="navbar-nav ml-auto">
+                
+              <li class="nav-item active">
+                <a class="nav-link" href="{{ url_for('index') }}">Home
+                  <span class="sr-only">(current)</span>
+                </a>
+              </li>
+             
+              {% if session.username %}
+              <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('profile', username=session.username) }}"> <span class="glyphicons glyphicons-user"></span> </span>☺ {{ session.username }}</a>
+              </li>
+              <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                  </li>
+              {% endif %}
+              {% if not session.username %}
+              <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+              </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/ozFri/WikiD-heroku">GitHub</a>
+                    </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+
+
