@@ -18,14 +18,14 @@
     <h2 id="aifnode-title">
     {% if "INode" in aifnode.type() %}
     {{aifnode.title}}
-    <a id="edit-button" class="btn btn-link" onclick="editTitle()">edit</a>
+    <a id="edit-button" class="btn btn-outline-info" onclick="editTitle()">edit</a>
     {% endif %}
     {% if "SNode" in aifnode.type() %}
         <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=aifnode.source_id)}}">"{{ aifnode.source}}"</a>
         {{ aifnode.schema }}  
         <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=aifnode.target_id)}}">"{{ aifnode.target}}"</a>
     {% endif %}
-    <a class="btn btn-link" href="{{ url_for('delete_aifnode', aifnode_id=aifnode.id)}}">delete</a><br>
+    <a class="btn btn-outline-delete" href="{{ url_for('delete_aifnode', aifnode_id=aifnode.id)}}">delete</a><br>
     </h2>
     {{aifnode.date}}
 </div>
@@ -34,15 +34,15 @@
         <div class="col-sm-3">
         </div>  
         <div class="col-md-2 bg-success">
-            <a class="btn btn-success" href="{{ url_for('vote_on_aifnode', aifnode_id=aifnode.id, vote_type='Agree') }}">agree</a><br>
+            <a class="btn btn-success" href="{{ url_for('vote_on_aifnode', aifnode_id=aifnode.id, vote_type='Agree') }}">Agree</a><br>
             {{agree_votes}} agreeing
         </div>  
         <div class="col-md-2 bg-danger">
-            <a class="btn btn-danger" href="{{ url_for('vote_on_aifnode', aifnode_id=aifnode.id, vote_type='Disagree') }}">disagree</a><br>
+            <a class="btn btn-danger" href="{{ url_for('vote_on_aifnode', aifnode_id=aifnode.id, vote_type='Disagree') }}">Disagree</a><br>
             {{disagree_votes}} disagreeing
         </div>  
         <div class="col-md-2 bg-warning">
-            <a class="btn btn-warning" href="{{ url_for('vote_on_aifnode', aifnode_id=aifnode.id, vote_type='Undecided') }}">undecided</a><br>
+            <a class="btn btn-warning" href="{{ url_for('vote_on_aifnode', aifnode_id=aifnode.id, vote_type='Undecided') }}">Undecided</a><br>
             {{undecided_votes}} undecided
         </div>  
         <div class="col-sm-3">
@@ -199,5 +199,7 @@ function editTitle(){
   title.parentNode.replaceChild(titleEdit, title);
   editButton.parentNode.replaceChild(confirmButton, editButton);
   }
+ 
 </script>
+
 {% endblock %}

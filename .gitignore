@@ -1,10 +1,11 @@
 *.pyc
 *.idea
 *.DS_Store
-instance/
-_site/
+instance\
+_site\
 .*.swp
 .*.swo
 venv
 tags
-node_modules/*
+node_modules\*
+webpack.config.js
