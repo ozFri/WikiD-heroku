@@ -8,4 +8,5 @@ _site\
 venv
 tags
 node_modules\*
+node_modules
 webpack.config.js
