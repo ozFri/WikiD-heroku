@@ -119,9 +119,10 @@ def add_S_node(aifnode_id):
     #    User(session['username']).add_I_Node(newSource)
     #    source = newSource = request.form['new-source']
     #    target = aifnode
-    schemaID = User(session['username']).add_S_Node(schema,source,target)
-    if (target and source and schemaID) is not None:
-        create_new_schema_relationship(source,schemaID,target)
+    if target != source:
+        schemaID = User(session['username']).add_S_Node(schema,source,target)
+        if (target and source and schemaID) is not None:
+            create_new_schema_relationship(source,schemaID,target)
     return redirect(request.referrer)
 
 @app.route('/event')
