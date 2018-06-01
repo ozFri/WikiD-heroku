@@ -1,4 +1,4 @@
-from .models import AIFNode, get_aifNodes, get_aifNode, rename_iNode,create_new_schema_relationship
+from .models import AIFNode, get_aifNodes, get_aifNode, rename_iNode,create_new_schema_relationship, get_INodes
 from flask import Flask, request, session, redirect, url_for, render_template, flash,jsonify
 from .user import User
 import requests
@@ -133,7 +133,7 @@ def event():
 @app.route('/aifnodes/<aifnode_id>')
 def aifNode(aifnode_id):
     aifnode = AIFNode(aifnode_id)
-    aifnodes = aifnode.aifnodes
+    inodes = get_INodes()
     agree_votes = aifnode.agreeing
     disagree_votes = aifnode.disagreeing
     undecided_votes = aifnode.undecided
@@ -143,7 +143,7 @@ def aifNode(aifnode_id):
     opposed_nodes = aifnode.opposed
     user_vote = aifnode.user_vote
     activity_feed = aifnode.activity_feed
-    return render_template('aifnode.html', aifnode=aifnode,supporting_nodes=supporting_nodes,supported_nodes=supported_nodes,opposing_nodes=opposing_nodes,opposed_nodes=opposed_nodes,agree_votes=agree_votes,disagree_votes=disagree_votes,undecided_votes=undecided_votes,user_vote=user_vote)
+    return render_template('aifnode.html',inodes=inodes,aifnode=aifnode,supporting_nodes=supporting_nodes,supported_nodes=supported_nodes,opposing_nodes=opposing_nodes,opposed_nodes=opposed_nodes,agree_votes=agree_votes,disagree_votes=disagree_votes,undecided_votes=undecided_votes,user_vote=user_vote)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

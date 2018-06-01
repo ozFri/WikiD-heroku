@@ -1,7 +1,7 @@
-body {
-  display: grid;
-  background:#eef;
-  grid-template-rows: 15% 60% 25%;
+/*body {
+    display: grid;
+    background:#eef;
+    grid-template-rows: 15% 60% 25%;
 }
 
 a:visited {
@@ -25,51 +25,51 @@ a:link{
 .monospace { font-family: Menlo, Monaco, Consolas, "Courier New", monospace }
 
 .stripe {
-   background:#333; 
-   color:#eee;
-   border:2px solid #eee;
+    background:#333; 
+    color:#eee;
+    border:2px solid #eee;
 }
 .brand
 {
 
 }
 .small-margin { margin: 1% auto;
-               width: 95%;
-               border: 3px solid #ccc;
-               padding: 1rem;
-               background: #fffffd; }
+    width: 95%;
+    border: 3px solid #ccc;
+    padding: 1rem;
+background: #fffffd; }
 
 .roundish-border{
-        -moz-border-radius:4px;
-        -webkit-border-radius:4px;	
-        border-radius:4px;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;	
+    border-radius:4px;
 }
 .round-border{
-        -moz-border-radius:12px;
-        -webkit-border-radius:12px;	
-        border-radius:12px;
+    -moz-border-radius:12px;
+    -webkit-border-radius:12px;	
+    border-radius:12px;
 }
 .rounder-border{
-        -moz-border-radius:32px;
-        -webkit-border-radius:32px;	
-        border-radius:32px;
+    -moz-border-radius:32px;
+    -webkit-border-radius:32px;	
+    border-radius:32px;
 }
 
 
 .wonderbar-main{
-  grid-column-start: 1;
-  grid-column-end: 2;
-  grid-row-start: 1;
-  grid-row-end: 3;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 3;
 }
 .wonderbar-helper{
-  display:grid;
-  grid-template-columns: auto auto auto;
-  grid-template-rows: auto auto auto;
+    display:grid;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto auto;
 }
 
 .wonderbar-buttons{
-  display:none;
+    display:none;
 }
 
 form:valid ~ .wonderbar-buttons {
@@ -92,19 +92,27 @@ form:valid ~ .wonderbar-buttons {
 }
 
 .octagon {
-  --notchSize: 20px;
-  
-  clip-path: 
+    --notchSize: 20px;
+
+    clip-path: 
     polygon(
-      0% var(--notchSize), 
-      var(--notchSize) 0%, 
-      calc(100% - var(--notchSize)) 0%, 
-      100% var(--notchSize), 
-      100% calc(100% - var(--notchSize)), 
-      calc(100% - var(--notchSize)) 100%, 
-      var(--notchSize) 100%, 
-      0% calc(100% - var(--notchSize))
+    0% var(--notchSize), 
+    var(--notchSize) 0%, 
+    calc(100% - var(--notchSize)) 0%, 
+    100% var(--notchSize), 
+    100% calc(100% - var(--notchSize)), 
+    calc(100% - var(--notchSize)) 100%, 
+    var(--notchSize) 100%, 
+    0% calc(100% - var(--notchSize))
     );
 }
+*/
 
+.inode-options{
+    visibility:hidden;
+}
+
+.inode-card :hover .inode-options{
+    visibility:visible;
+}
 

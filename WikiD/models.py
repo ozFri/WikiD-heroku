@@ -89,6 +89,14 @@ def get_aifNode_by_title(aifnode_title):
 def get_sNode(snode_id):
     return graph.find_one("SNode", "id", snode_id)
 
+def get_INodes():
+    query= """
+    MATCH (inode:INode)
+    RETURN inode
+    ORDER BY inode.timestamp DESC LIMIT 5000
+    """
+    return graph.run(query).data()
+
 def get_aifNodes():
     query= """
     MATCH (user:User)-[:PUBLISHED]->(aifnode)
