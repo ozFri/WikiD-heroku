@@ -31,19 +31,19 @@ class User:
         else:
             return False
 
-    def add_S_Node(self,schema,source,target):
+    def add_S_Node(self,schema,sourceID,targetID):
         user= self.find()
-        sourceNode=get_aifNode_by_title(source)
-        targetNode=get_aifNode_by_title(target)
+        sourceNode=get_aifNode(sourceID)
+        targetNode=get_aifNode(targetID)
         schemaNode= Node(
                 "SNode",
                 id=str(uuid.uuid4()),
                 schema=schema,
-                source=source,
-                source_id=sourceNode.properties["id"],
-                target=target,
-                target_id=targetNode.properties["id"],
-                title=source+" "+schema+" "+target,
+                source=sourceNode.properties["title"],
+                source_id=sourceID,
+                target=targetNode.properties["title"],
+                target_id=targetID,
+                title=sourceNode.properties["title"]+" "+schema+" "+targetNode.properties["title"],
                 timestamp=timestamp(),
                 date=date()
                 )
