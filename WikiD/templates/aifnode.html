@@ -55,7 +55,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="sorting>Sort
+                            <a class="nav-link" id="sorting">Sort
                                 <i class="fa fa-sort"></i>
                                 <i class="fa fa-bars"></i>
                             </a>
@@ -142,9 +142,9 @@
                                 <div class="col-9">
 
                                     <div class="name card-body">
-                                    <p class="nameFuzzy"  >                       
-                                      <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.inode.id)}}">"{{ row.inode.title}}"</a>
-</p>
+
+                                      <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.inode.id)}}">            <p class="nameFuzzy"  >{{ row.inode.title}}</p>
+</a>
                                     </div>
                                     <div class="date card-body">
                                         {{ row.inode.date }}
