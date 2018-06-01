@@ -89,6 +89,14 @@ def get_aifNode_by_title(aifnode_title):
 def get_sNode(snode_id):
     return graph.find_one("SNode", "id", snode_id)
 
+def get_INodes():
+    query= """
+    MATCH (inode:INode)
+    RETURN inode
+    ORDER BY inode.timestamp DESC LIMIT 5000
+    """
+    return graph.run(query).data()
+
 def get_aifNodes():
     query= """
     MATCH (user:User)-[:PUBLISHED]->(aifnode)
@@ -152,7 +160,7 @@ class AIFNode:
         if username is None:
             return
         query = """
-        MATCH (User{username:"""+'"'+session["username"]+'"'+"""})-[OBSERVES]->(ENode{name:"""+'"'+session["eventname"]+'"'+"""})-[vote]->(SNode{title:"""+'"'+self.title+'"'+"""})
+        MATCH (User{username:"""+'"'+session["username"]+'"'+"""})-[OBSERVES]->(ENode{name:"""+'"'+session["eventname"]+'"'+"""})-[vote]->(SNode{title:"""+'"'+self.title.replace('"','\\"')+'"'+"""})
         RETURN vote
         """
         return graph.run(query)
@@ -162,7 +170,7 @@ class AIFNode:
         if eventname is None:
             eventname = "General"
         query = """
-        MATCH (vote) WHERE (:User)-[:VOTED]->(vote:VNode)-[:APPLIES_TO]->(:ENode{name:"""+'"'+eventname+'"'+"""}) AND (vote{name:"""+'"'+vote_type+'"'+"""})-[:APPLIES_TO]->({title:"""+'"'+self.title+'"'+"""})
+        MATCH (vote) WHERE (:User)-[:VOTED]->(vote:VNode)-[:APPLIES_TO]->(:ENode{name:"""+'"'+eventname+'"'+"""}) AND (vote{name:"""+'"'+vote_type+'"'+"""})-[:APPLIES_TO]->({title:"""+'"'+self.title.replace('"','\\"')+'"'+"""})
         RETURN count(DISTINCT vote) as votes
         """
         return graph.run(query).evaluate()

@@ -1,6 +1,8 @@
-from .models import AIFNode, get_aifNodes, get_aifNode, rename_iNode,create_new_schema_relationship
-from flask import Flask, request, session, redirect, url_for, render_template, flash 
+from .models import AIFNode, get_aifNodes, get_aifNode, rename_iNode,create_new_schema_relationship, get_INodes
+from flask import Flask, request, session, redirect, url_for, render_template, flash,jsonify
 from .user import User
+import requests
+from . import config
 
 app = Flask(__name__)
 
@@ -90,7 +92,7 @@ def add_S_node(aifnode_id):
     username = session.get('username')
     eventname = session.get('eventname')
     if not username or username == "Guest":
-        flash('You must be logged in to agree with a post.')
+        flash('You must be logged in to agree with a post.','danger')
         return redirect(url_for('login'))
     aifnode = AIFNode(aifnode_id)
     aifnodes = get_aifNodes()
@@ -132,7 +134,7 @@ def event():
 @app.route('/aifnodes/<aifnode_id>')
 def aifNode(aifnode_id):
     aifnode = AIFNode(aifnode_id)
-    aifnodes = aifnode.aifnodes
+    inodes = get_INodes()
     agree_votes = aifnode.agreeing
     disagree_votes = aifnode.disagreeing
     undecided_votes = aifnode.undecided
@@ -142,7 +144,7 @@ def aifNode(aifnode_id):
     opposed_nodes = aifnode.opposed
     user_vote = aifnode.user_vote
     activity_feed = aifnode.activity_feed
-    return render_template('aifnode.html', aifnode=aifnode,supporting_nodes=supporting_nodes,supported_nodes=supported_nodes,opposing_nodes=opposing_nodes,opposed_nodes=opposed_nodes,agree_votes=agree_votes,disagree_votes=disagree_votes,undecided_votes=undecided_votes,user_vote=user_vote)
+    return render_template('aifnode.html',inodes=inodes,aifnode=aifnode,supporting_nodes=supporting_nodes,supported_nodes=supported_nodes,opposing_nodes=opposing_nodes,opposed_nodes=opposed_nodes,agree_votes=agree_votes,disagree_votes=disagree_votes,undecided_votes=undecided_votes,user_vote=user_vote)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -152,7 +154,7 @@ def register():
 
         if User.register_validation(flash, username, password):
             session['username'] = username
-            flash('Logged in.')
+            flash('Logged in.','success')
             return redirect(url_for('event'))
 
     return render_template('register.html')
@@ -164,11 +166,11 @@ def login():
         password = request.form['password']
 
         if not User(username).verify_password(password):
-            flash('Invalid login.')
+            flash('Invalid login.','danger')
         else:
             session['username'] = username
             session['eventname'] = "General"
-            flash('Logged in.')
+            flash('Logged in.','success')
             return redirect(url_for('index'))
 
     return render_template('login.html')
@@ -177,7 +179,7 @@ def login():
 def logout():
     session.pop('username', None)
     session.pop('eventname', None)
-    flash('Logged out.')
+    flash('Logged out.','primary')
     return redirect(url_for('index'))
 
 @app.route('/change_event', methods=['POST'])
@@ -190,7 +192,7 @@ def add_I_Node():
     title = request.form['title']
 
     if not title:
-        flash('You must give your post a title.')
+        flash('You must give your post a title.','primary')
     else:
         User(session['username']).add_I_Node(title)
 
@@ -201,12 +203,12 @@ def vote_on_aifnode(aifnode_id,vote_type):
     username = session.get('username')
     eventname = session.get('eventname')
     if not username or username == "Guest":
-        flash('You must be logged in to vote on a post.')
+        flash('You must be logged in to vote on a post.','danger')
         return redirect(url_for('login'))
 
     User(username).vote_on_aifnode(aifnode_id, eventname, vote_type)
 
-    flash('Voted "' + vote_type + '" on inode in event "' + eventname + '"')
+    flash('Voted "' + vote_type + '" on inode in event "' + eventname + '"','primary')
     return redirect(request.referrer)
 
 @app.route('/<inode_id>/rename')
@@ -214,7 +216,7 @@ def rename_I_Node(inode_id):
     username = session.get('username')
     eventname = session.get('eventname')
     if not username or username == "Guest":
-        flash('You must be logged in to agree with a post.')
+        flash('You must be logged in to agree with a post.','danger')
         return redirect(url_for('login'))
     newTitle = request.form['new-title']
     rename_iNode(aifnode_id,newTitle)
@@ -226,11 +228,11 @@ def delete_aifnode(aifnode_id):
     username = session.get('username')
     eventname = session.get('eventname')
     if not username or username == "Guest":
-        flash('You must be logged in to delete a post.')
+        flash('You must be logged in to delete a post.','danger')
         return redirect(url_for('login'))
     aifnode = AIFNode(aifnode_id)
     aifnode.delete()
-    flash('Deleted Node')
+    flash('Deleted Node','primary')
     return redirect("/index")
 
 @app.route('/profile/<username>')
@@ -265,3 +267,15 @@ def profile(username):
 def search(searchterm):
 
     return searchterm
+
+@app.route('/graphql',methods=['GET'])
+def getGraphql():
+    query=request.args.get('query')
+
+    #JSON object
+    json={"query":query}
+
+    restAPI=requests.post(config.graphql_url,json=json,headers=config.headers)
+
+
+    return jsonify(restAPI.json()['data']);

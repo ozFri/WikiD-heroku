@@ -3,7 +3,7 @@
   {% for row in feed|reverse %}
         <article>
         <fieldset class="fieldset p1 border rounded">
-            <legend class="label m1 p1">feed-item</legend>
+            <!-- <legend class="label m1 p1">feed-item</legend> -->
             <b><a href="{{ url_for('profile', username=row.actor.username) }}">{{ "You" if session.username==row.actor.username else row.actor.username }}</a></b>
             {{ row.item.label.lower() }}
         <a class="feed-title" href="{{ url_for('aifNode', aifnode_id=row.target.id)}}">{{ row.target.title }}</a>
