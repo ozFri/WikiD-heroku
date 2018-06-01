@@ -2,7 +2,7 @@
 <div id="nodes" class="container">
     <div class="row">
         <div class="col-6">
-            <div class="row">
+            <div class="row mb-5">
                 <div class="col-12">
                     <div class="post-header">
                         <h3 id="aifnode-title">
@@ -19,7 +19,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mb-5">
                 <div class="col-12">
 
                     <button type="button" class="btn btn-success" href="{{ url_for('vote_on_aifnode', aifnode_id=aifnode.id, vote_type='Agree') }}">
@@ -50,16 +50,26 @@
                 <div class="col-12">
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
-                            <a class="nav-link" id="filtering">Filter</a>
+                            <a class="nav-link" id="filtering">Filter
+                                <i class="fa fa-filter"></i>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="sorting"> Sort</a>
+                            <a class="nav-link" id="sorting>Sort
+                                <i class="fa fa-sort"></i>
+                                <i class="fa fa-bars"></i>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link">Link</a>
+                            <a class="nav-link">Relationships
+                                <i class="fa fa-exchange"></i>
+                                <i class="fa fa-link"></i>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link">Add</a>
+                            <a class="nav-link">Add
+                                <i class="fa fa-plus-square-o"></i>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -111,18 +121,34 @@
                         {% for row in inodes %}
                         <div class="card inode-card">
                             <div class="row">
-                                <div class="col-3 inode-options">
-                                    <button class="btn btn-outline-secondary btn-block"><i class="fa fa-shield"></i></button>
-                                    <button class="btn btn-outline-secondary btn-block"><i class="fa fa-bomb"></i></button>
-                                    <button class="btn btn-outline-secondary btn-block"><i class="fa fa-shield"></i></button>
-                                    <button class="btn btn-outline-secondary btn-block"><i class="fa fa-bomb"></i></button>
-                                </div>
+                                <form method="POST" action="{{ url_for('add_S_node',aifnode_id=aifnode.id) }}" class="col-3 inode-options">
+                                    <button type="submit" name="support-source" value={{row.inode.id}} class="btn btn-outline-secondary btn-block">
+                                        <i class="fa fa-arrow-left"></i>
+                                        <i class="fa fa-shield"></i>
+                                    </button>
+                                    <button type="submit" name="oppose-source" value={{row.inode.id}} class="btn btn-outline-secondary btn-block">
+                                        <i class="fa fa-arrow-left"></i>
+                                        <i class="fa fa-bomb"></i>
+                                    </button>
+                                    <button type="submit" name="support-target" value={{row.inode.id}} class="btn btn-outline-secondary btn-block">
+                                        <i class="fa fa-shield"></i>
+                                        <i class="fa fa-arrow-right"></i>
+                                    </button>
+                                    <button type="submit" name="oppose-target" value={{row.inode.id}} class="btn btn-outline-secondary btn-block">
+                                        <i class="fa fa-bomb"></i>
+                                        <i class="fa fa-arrow-right"></i>
+                                    </button>
+                                </form>
                                 <div class="col-9">
+
                                     <div class="name card-body">
-                                    <p class="nameFuzzy"  >  {{ row.inode.title }}</p>
+                                    <p class="nameFuzzy"  >                       
+                                      <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.inode.id)}}">"{{ row.inode.title}}"</a>
+</p>
                                     </div>
                                     <div class="date card-body">
                                         {{ row.inode.date }}
+
                                     </div>
                                 </div>
                             </div>

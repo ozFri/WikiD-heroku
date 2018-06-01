@@ -112,7 +112,7 @@ def timestamp():
     return delta.total_seconds()
 
 def date():
-    return datetime.now().strftime('%F')
+    return datetime.now().strftime('%F %H:%M')
 
 
 def rename_iNode(inode_id,new_title):
