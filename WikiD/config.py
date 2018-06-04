@@ -12,7 +12,7 @@ db_host_port = "24786"
 db_url =  "bolt://hobby-hankpoiekhacgbkegaaijpal.dbs.graphenedb.com:" % (db_host_port)
 # This for username=neo4j, password='12345'
 # Link to generate https://www.blitter.se/utils/basic-authentication-header-generator/
-headers={'Authorization': 'Basic YXBwNDU5ODA2OTQtMVNxZXNPdzo9ImIuWFloZFZjdGdEOGIwLmpzeHhsVGRCODQ4bG9JdG4='}
+headers={'Authorization': 'b.XYhdVctgD8b0.jsxxlTdB848loItn'}
 
 #link to neo4j graphql:
 graphql_url= db_url + '/graphql/'
