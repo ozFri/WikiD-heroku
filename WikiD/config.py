@@ -6,10 +6,10 @@
 #headers={'Authorization': 'Basic bmVvNGo6MTIzNDU='}
 
 #REMOTE SETTINGS
-user = "app45980694-1SqesOw"
+user = "app45980694-1SqesO"
 password ="b.XYhdVctgD8b0.jsxxlTdB848loItn"
 db_host_port = "24786"
-db_url =  "bolt://hobby-hankpoiekhacgbkegaaijpal.dbs.graphenedb.com:24786"# % (db_host_port)
+db_url =  "https://%s/db/data" % (db_host_port)
 # This for username=neo4j, password='12345'
 # Link to generate https://www.blitter.se/utils/basic-authentication-header-generator/
 headers={'Authorization': 'b.XYhdVctgD8b0.jsxxlTdB848loItn'}
