@@ -118,23 +118,23 @@
             <div class="row">
                 <div class="col-12">
                     <div  class="list card">
-                        {% for row in inodes %}
-                        <div class="card inode-card">
+                        {% for row in aifnodes %}
+                        <div class="card aifnode-card">
                             <div class="row">
-                                <form method="POST" action="{{ url_for('add_S_node',aifnode_id=aifnode.id) }}" class="col-3 inode-options">
-                                    <button type="submit" name="support-source" value={{row.inode.id}} class="btn btn-outline-secondary btn-block">
+                                <form method="POST" action="{{ url_for('add_S_node',aifnode_id=aifnode.id) }}" class="col-3 aifnode-options">
+                                    <button type="submit" name="support-source" value={{row.aifnode.id}} class="btn btn-outline-secondary btn-block">
                                         <i class="fa fa-arrow-left"></i>
                                         <i class="fa fa-shield"></i>
                                     </button>
-                                    <button type="submit" name="oppose-source" value={{row.inode.id}} class="btn btn-outline-secondary btn-block">
+                                    <button type="submit" name="oppose-source" value={{row.aifnode.id}} class="btn btn-outline-secondary btn-block">
                                         <i class="fa fa-arrow-left"></i>
                                         <i class="fa fa-bomb"></i>
                                     </button>
-                                    <button type="submit" name="support-target" value={{row.inode.id}} class="btn btn-outline-secondary btn-block">
+                                    <button type="submit" name="support-target" value={{row.aifnode.id}} class="btn btn-outline-secondary btn-block">
                                         <i class="fa fa-shield"></i>
                                         <i class="fa fa-arrow-right"></i>
                                     </button>
-                                    <button type="submit" name="oppose-target" value={{row.inode.id}} class="btn btn-outline-secondary btn-block">
+                                    <button type="submit" name="oppose-target" value={{row.aifnode.id}} class="btn btn-outline-secondary btn-block">
                                         <i class="fa fa-bomb"></i>
                                         <i class="fa fa-arrow-right"></i>
                                     </button>
@@ -142,12 +142,18 @@
                                 <div class="col-9">
 
                                     <div class="name card-body">
-
-                                      <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.inode.id)}}">            <p class="nameFuzzy"  >{{ row.inode.title}}</p>
+                                      {% if "INode" in row.labels %}
+                                          <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.aifnode.id)}}">            <p class="nameFuzzy"  >{{ row.aifnode.title}}</p>
 </a>
+                                      {% endif %}
+                                      {% if "SNode" in row.labels %}
+                                          "{{ row.aifnode.source}}"
+                                          <a class="aifnode-title" href="{{ url_for('aifNode', aifnode_id=row.aifnode.id)}}">{{ row.aifnode.schema }}</a>
+                                          "{{ row.aifnode.target}}"
+                                      {% endif %}
                                     </div>
                                     <div class="date card-body">
-                                        {{ row.inode.date }}
+                                        {{ row.aifnode.date }}
 
                                     </div>
                                 </div>
