@@ -1,6 +1,6 @@
 from py2neo import Graph, Node, Relationship, authenticate
 from passlib.hash import bcrypt
-from .models import timestamp, date, create_new_event,create_new_vote, get_aifNode_by_title, get_aifNode, create_feed_item, add_item_to_feed
+from .models import timestamp, date, create_new_discussion,create_new_vote, get_aifNode_by_title, get_aifNode, create_feed_item, add_item_to_feed
 from .models import graph
 from datetime import datetime
 import uuid
@@ -79,29 +79,29 @@ class User:
             #rel = Relationship(tag, "TAGGED", post)
             #graph.create(rel)
 
-    def vote_on_aifnode(self, aifNode_id, event_name, vote_type):
+    def vote_on_aifnode(self, aifNode_id, discussion_name, vote_type):
         user = self.find()
         aifNode = get_aifNode(aifNode_id)
-        cypher_string_find_event = \
-            "MATCH (:User {username:'" + user.properties[ "username"] + "'})-[r]->(n:ENode {name:'" + event_name + "'})\
+        cypher_string_find_discussion = \
+            "MATCH (:User {username:'" + user.properties[ "username"] + "'})-[r]->(n:ENode {name:'" + discussion_name + "'})\
             RETURN count(n) "
         cypher_string_find_vote = \
             "MATCH (vote) WHERE \
             (:User {username:'" + user.properties[ "username"] + "'})-[:VOTED]->(vote:VNode)\
-            AND (vote)-[:APPLIES_TO]->(:ENode {name:'" + event_name + "'})\
+            AND (vote)-[:APPLIES_TO]->(:ENode {name:'" + discussion_name + "'})\
             AND (vote)-[:APPLIES_TO]->({id:'" + aifNode_id + "'})\
             RETURN vote"
-        # check if user observes this event, and that it exists, otherwise, create it.
+        # check if user observes this discussion, and that it exists, otherwise, create it.
         vote = graph.evaluate(cypher_string_find_vote)
         if vote is not None:
             vote["name"] = vote_type
             graph.push(vote)
         else:
-            if not graph.run(cypher_string_find_event).evaluate():
-                event = create_new_event(user, event_name)
+            if not graph.run(cypher_string_find_discussion).evaluate():
+                discussion = create_new_discussion(user, discussion_name)
             else:
-                event = graph.find_one("ENode", "name", event_name)
-            create_new_vote(user, vote_type, event, aifNode)
+                discussion = graph.find_one("ENode", "name", discussion_name)
+            create_new_vote(user, vote_type, discussion, aifNode)
         graph.merge(Relationship(user, "FOLLOWS", aifNode))
         feedItem = create_feed_item(user,aifNode,"VOTED '"+vote_type.upper()+"'")
         add_item_to_feed(feedItem,aifNode)

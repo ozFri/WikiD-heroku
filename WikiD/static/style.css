@@ -108,11 +108,11 @@ form:valid ~ .wonderbar-buttons {
 }
 */
 
-.inode-options{
+.aifnode-options{
     visibility:hidden;
 }
 
-.inode-card :hover .inode-options{
+.aifnode-card :hover .aifnode-options{
     visibility:visible;
 }
 

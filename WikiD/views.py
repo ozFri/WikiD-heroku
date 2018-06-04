@@ -90,7 +90,7 @@ def init_rest_interface(cfg, flask_webapp):
 @app.route('/<aifnode_id>/add-Snode', methods=['POST','GET'])
 def add_S_node(aifnode_id):
     username = session.get('username')
-    eventname = session.get('eventname')
+    discussionname = session.get('discussionname')
     if not username or username == "Guest":
         flash('You must be logged in to agree with a post.','danger')
         return redirect(url_for('login'))
@@ -152,16 +152,16 @@ def add_S_node(aifnode_id):
 
     return redirect(request.referrer)
 
-@app.route('/event')
-def event():
-    session['eventname'] = "General"
-    flash(session['eventname'])
+@app.route('/discussion')
+def discussion():
+    session['discussionname'] = "General"
+    flash(session['discussionname'])
     return render_template('index.html')
 
 @app.route('/aifnodes/<aifnode_id>')
 def aifNode(aifnode_id):
     aifnode = AIFNode(aifnode_id)
-    inodes = get_INodes()
+    aifnodes = get_aifNodes()
     agree_votes = aifnode.agreeing
     disagree_votes = aifnode.disagreeing
     undecided_votes = aifnode.undecided
@@ -171,7 +171,8 @@ def aifNode(aifnode_id):
     opposed_nodes = aifnode.opposed
     user_vote = aifnode.user_vote
     activity_feed = aifnode.activity_feed
-    return render_template('aifnode.html',inodes=inodes,aifnode=aifnode,supporting_nodes=supporting_nodes,supported_nodes=supported_nodes,opposing_nodes=opposing_nodes,opposed_nodes=opposed_nodes,agree_votes=agree_votes,disagree_votes=disagree_votes,undecided_votes=undecided_votes,user_vote=user_vote)
+
+    return render_template('aifnode.html',aifnodes=aifnodes,aifnode=aifnode,supporting_nodes=supporting_nodes,supported_nodes=supported_nodes,opposing_nodes=opposing_nodes,opposed_nodes=opposed_nodes,agree_votes=agree_votes,disagree_votes=disagree_votes,undecided_votes=undecided_votes,user_vote=user_vote)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -182,7 +183,7 @@ def register():
         if User.register_validation(flash, username, password):
             session['username'] = username
             flash('Logged in.','success')
-            return redirect(url_for('event'))
+            return redirect(url_for('discussion'))
 
     return render_template('register.html')
 
@@ -196,7 +197,7 @@ def login():
             flash('Invalid login.','danger')
         else:
             session['username'] = username
-            session['eventname'] = "General"
+            session['discussionname'] = "General"
             flash('Logged in.','success')
             return redirect(url_for('index'))
 
@@ -205,13 +206,13 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('username', None)
-    session.pop('eventname', None)
+    session.pop('discussionname', None)
     flash('Logged out.','primary')
     return redirect(url_for('index'))
 
-@app.route('/change_event', methods=['POST'])
-def change_event():
-    session["eventname"] = request.form['event']
+@app.route('/change_discussion', methods=['POST'])
+def change_discussion():
+    session["discussionname"] = request.form['discussion']
     return redirect(request.referrer)
 
 @app.route('/add_iNode', methods=['POST'])
@@ -228,20 +229,20 @@ def add_I_Node():
 @app.route('/<aifnode_id>/vote/<vote_type>')
 def vote_on_aifnode(aifnode_id,vote_type):
     username = session.get('username')
-    eventname = session.get('eventname')
+    discussionname = session.get('discussionname')
     if not username or username == "Guest":
         flash('You must be logged in to vote on a post.','danger')
         return redirect(url_for('login'))
 
-    User(username).vote_on_aifnode(aifnode_id, eventname, vote_type)
+    User(username).vote_on_aifnode(aifnode_id, discussionname, vote_type)
 
-    flash('Voted "' + vote_type + '" on inode in event "' + eventname + '"','primary')
+    flash('Voted "' + vote_type + '" on inode in discussion "' + discussionname + '"','primary')
     return redirect(request.referrer)
 
 @app.route('/<inode_id>/rename')
 def rename_I_Node(inode_id):
     username = session.get('username')
-    eventname = session.get('eventname')
+    discussionname = session.get('discussionname')
     if not username or username == "Guest":
         flash('You must be logged in to agree with a post.','danger')
         return redirect(url_for('login'))
@@ -253,7 +254,7 @@ def rename_I_Node(inode_id):
 @app.route('/<aifnode_id>/delete')
 def delete_aifnode(aifnode_id):
     username = session.get('username')
-    eventname = session.get('eventname')
+    discussionname = session.get('discussionname')
     if not username or username == "Guest":
         flash('You must be logged in to delete a post.','danger')
         return redirect(url_for('login'))
