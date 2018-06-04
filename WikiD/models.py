@@ -7,10 +7,13 @@ import uuid
 
 from . import config
 
-authenticate(config.db_host_port, config.user, config.password)
+authenticate(config.db_host_url, config.user, config.password)
 graph = Graph(config.db_url, bolt = False, secure=config.is_secured)
 
-def create_new_vote(user, vote_type, event, node):
+#def get_discussions():
+
+
+def create_new_vote(user, vote_type, discussion, node):
     vote = Node(
         "VNode",
         id=str(uuid.uuid4()),
@@ -20,22 +23,22 @@ def create_new_vote(user, vote_type, event, node):
     )
     graph.create(vote)
     graph.merge(Relationship(user, "VOTED", vote))
-    graph.merge(Relationship(vote, "APPLIES_TO", event))
+    graph.merge(Relationship(vote, "APPLIES_TO", discussion))
     graph.merge(Relationship(vote, "APPLIES_TO", node))
     graph.merge(Relationship(user, "FOLLOWS", node))
-    return event
+    return discussion
 
-def create_new_event(user, event_name="General"):
-    event = Node(
+def create_new_discussion(user, discussion_name="General"):
+    discussion = Node(
         "ENode",
         id=str(uuid.uuid4()),
-        name=event_name,
+        name=discussion_name,
         timestamp=timestamp(),
         date=date()
     )
-    graph.create(event)
-    graph.merge(Relationship(user, "OBSERVES", event))
-    return event
+    graph.create(discussion)
+    graph.merge(Relationship(user, "OBSERVES", discussion))
+    return discussion
 
 def add_item_to_feed(feedItem,node):
     query = """
@@ -100,7 +103,9 @@ def get_INodes():
 def get_aifNodes():
     query= """
     MATCH (user:User)-[:PUBLISHED]->(aifnode)
-    RETURN user.username AS username, aifnode
+    RETURN user.username AS username,
+    aifnode,
+    labels(aifnode) as labels
     ORDER BY aifnode.timestamp DESC LIMIT 5000
     """
     return graph.run(query).data()
@@ -160,17 +165,17 @@ class AIFNode:
         if username is None:
             return
         query = """
-        MATCH (User{username:"""+'"'+session["username"]+'"'+"""})-[OBSERVES]->(ENode{name:"""+'"'+session["eventname"]+'"'+"""})-[vote]->(SNode{title:"""+'"'+self.title.replace('"','\\"')+'"'+"""})
+        MATCH (User{username:"""+'"'+session["username"]+'"'+"""})-[OBSERVES]->(ENode{name:"""+'"'+session["discussionname"]+'"'+"""})-[vote]->(SNode{title:"""+'"'+self.title.replace('"','\\"')+'"'+"""})
         RETURN vote
         """
         return graph.run(query)
 
     def get_votes(self,vote_type):
-        eventname = session.get("eventname")
-        if eventname is None:
-            eventname = "General"
+        discussionname = session.get("discussionname")
+        if discussionname is None:
+            discussionname = "General"
         query = """
-        MATCH (vote) WHERE (:User)-[:VOTED]->(vote:VNode)-[:APPLIES_TO]->(:ENode{name:"""+'"'+eventname+'"'+"""}) AND (vote{name:"""+'"'+vote_type+'"'+"""})-[:APPLIES_TO]->({title:"""+'"'+self.title.replace('"','\\"')+'"'+"""})
+        MATCH (vote) WHERE (:User)-[:VOTED]->(vote:VNode)-[:APPLIES_TO]->(:ENode{name:"""+'"'+discussionname+'"'+"""}) AND (vote{name:"""+'"'+vote_type+'"'+"""})-[:APPLIES_TO]->({title:"""+'"'+self.title.replace('"','\\"')+'"'+"""})
         RETURN count(DISTINCT vote) as votes
         """
         return graph.run(query).evaluate()
