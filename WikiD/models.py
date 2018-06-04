@@ -8,7 +8,7 @@ import uuid
 from . import config
 
 authenticate(config.db_url, config.user, config.password)
-graph = Graph(config.db_url+"/db/data", bolt = True, secure=config.is_secured)
+graph = Graph(config.db_url, bolt = True, secure=config.is_secured)
 
 #def get_discussions():
 
