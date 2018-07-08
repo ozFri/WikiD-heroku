@@ -21,16 +21,15 @@
             </div>
             <div class="row mb-5">
                 <div class="col-12">
-
-                    <button type="button" class="btn btn-success" href="{{ url_for('vote_on_aifnode', aifnode_id=aifnode.id, vote_type='Agree') }}">
+                    <a class="btn btn-{{'outline-' if user_vote != 'Agree'}}success" href="{{ url_for('vote_on_aifnode', aifnode_id=aifnode.id, vote_type='Agree') }}">
                         Agree
                         <span class="badge badge-light">{{agree_votes}}</span>
-                    </button>
+                    </a>
 
-                    <button type="button" class="btn btn-danger" href="{{ url_for('vote_on_aifnode', aifnode_id=aifnode.id, vote_type='Disagree') }}">
+                    <a class="btn btn-{{'outline-' if user_vote != 'Disagree'}}danger" href="{{ url_for('vote_on_aifnode', aifnode_id=aifnode.id, vote_type='Disagree') }}">
                         Disagree
                         <span class="badge badge-light">{{disagree_votes}}</span>
-                    </button>
+                    </a>
 
                     <!-- <button type="button" class="btn btn-warning" href="{{ url_for('vote_on_aifnode', aifnode_id=aifnode.id, vote_type='Undecided') }}">
                         Undecided
