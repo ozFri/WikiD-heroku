@@ -6,7 +6,7 @@ import os
 import uuid
 from . import config
 if os.environ.get("GRAPHENEDB_URL"):
-    from config import heroku as config
+    config = config.heroku
 
 authenticate(config.db_host_port, config.user, config.password)
 graph = Graph(config.db_url, bolt = False, secure=config.is_secured)
