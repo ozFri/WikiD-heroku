@@ -4,8 +4,9 @@ from flask import session
 from datetime import datetime
 import os
 import uuid
-
 from . import config
+if os.environ.get("GRAPHENEDB_URL"):
+    from config import heroku as config
 
 authenticate(config.db_host_port, config.user, config.password)
 graph = Graph(config.db_url, bolt = False, secure=config.is_secured)
