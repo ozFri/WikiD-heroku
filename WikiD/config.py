@@ -5,6 +5,10 @@ class config:
     db_host_port = "localhost:7473"
     db_url = "https://%s/db/data" % (db_host_port)
     headers={'Authorization': 'Basic bmVvNGo6MTIzNDU='}
+    #link to neo4j graphql:
+    graphql_url= db_url + '/graphql/'
+
+    is_secured = True
 
 #REMOTE SETTINGS
 class heroku(config):
@@ -16,7 +20,3 @@ class heroku(config):
     # Link to generate https://www.blitter.se/utils/basic-authentication-header-generator/
     headers={'Authorization': 'b.Dn3Ho4YY9uNa.OI0SJoL7PTg0HLoq'}
 
-#link to neo4j graphql:
-graphql_url= db_url + '/graphql/'
-
-is_secured = True
