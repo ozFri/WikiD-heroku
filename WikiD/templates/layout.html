@@ -11,15 +11,26 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
         crossorigin="anonymous">
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <!--script src="{{ url_for('static', filename='dist/app.bundle.js') }}"></script-->
     <!-- <script src="{{ url_for('static', filename='scripts/libs/require.js') }}"></script> -->
     <!-- <script src="{{ url_for('static', filename='scripts/libs/jquery.js') }}"></script> -->
-    <!-- <script src="{{ url_for('static', filename='scripts/src/common.js') }}"></script> -->
+     <script src="{{ url_for('static', filename='scripts/src/index.js') }}"></script>
 </head>
 
 <body>
 
     {% include 'navbar.html' %}
+    <div class="todoapp"></div>
     <div class="container" >
+  {% if session.username %}
+    <h3>State your mind</h3>
+    <form class="flex mb2" action="{{ url_for('add_I_Node') }}" method="post">
+            <dt>Statement:</dt>
+            <dd><input class="form-control" type="text"  name="title"></dd>
+            <dt><button class="btn btn-outline-primary" type="submit">Share</button></dt>
+            
+    </form>
+  {% endif %}
         <!-- <div id="randomuser"></div> -->
 
         {% for category, message in get_flashed_messages(with_categories=true) %}
