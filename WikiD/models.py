@@ -165,10 +165,11 @@ class AIFNode:
         if username is None:
             return
         query = """
-        MATCH (User{username:"""+'"'+session["username"]+'"'+"""})-[OBSERVES]->(ENode{name:"""+'"'+session["discussionname"]+'"'+"""})-[vote]->(SNode{title:"""+'"'+self.title.replace('"','\\"')+'"'+"""})
-        RETURN vote
+        MATCH (:User{username:"""+'"'+username+'"'+"""})-[:VOTED]->(vote:VNode)
+        WHERE (vote)-[:APPLIES_TO]-({title:"""+'"'+self.title.replace('"','\\"')+'"'+"""}) AND (vote)-[:APPLIES_TO]-(:ENode{name:"""+'"'+session["discussionname"]+'"'+"""})
+        RETURN vote.name
         """
-        return graph.run(query)
+        return graph.run(query).evaluate()
 
     def get_votes(self,vote_type):
         discussionname = session.get("discussionname")

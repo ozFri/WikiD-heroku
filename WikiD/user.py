@@ -94,6 +94,9 @@ class User:
         # check if user observes this discussion, and that it exists, otherwise, create it.
         vote = graph.evaluate(cypher_string_find_vote)
         if vote is not None:
+            if vote["name"] == vote_type:
+                # TODO: error
+                return 'error'
             vote["name"] = vote_type
             graph.push(vote)
         else:
