@@ -7,6 +7,10 @@ from . import config
 app = Flask(__name__)
 
 #Render Index Page
+@app.route('/todo')
+def todo():
+    return render_template('todo.html')
+
 @app.route('/index')
 @app.route('/')
 def index():
@@ -87,68 +91,22 @@ def init_rest_interface(cfg, flask_webapp):
 # @app.route('/<aifnode_id>/add-tag', methods=['POST','GET'])
 # def add_tag(aifnode_id):
 
-@app.route('/<aifnode_id>/add-Snode', methods=['POST','GET'])
-def add_S_node(aifnode_id):
+@app.route('/<source>/<schema>/<target>', methods=['POST','GET'])
+def add_S_node(source,schema,target):
     username = session.get('username')
     discussionname = session.get('discussionname')
     if not username or username == "Guest":
         flash('You must be logged in to agree with a post.','danger')
         return redirect(url_for('login'))
-    aifnode = AIFNode(aifnode_id)
     aifnodes = get_aifNodes()
-    #the type of the schema
-    #schema = request.form['schema']
-    #the title of the target node
-    #targetIndex = request.form.get('target',None)
-    #the title of the source node
-    #sourceIndex = request.form.get('source',None)
-    #newTarget = request.form.getlist('new-target',None)
-    #newSource = request.form.getlist('new-source',None)
-    #schemaID = None
-    #if targetIndex is not None:
-    #    target = aifnodes[int(targetIndex)-1]['aifnode']['title']
-    #    source = aifnode.title
-    #elif sourceIndex is not None:
-    #    source = aifnodes[int(sourceIndex)-1]['aifnode']['title']
-    #    target = aifnode.title
-    #elif newTarget is not None:
-    #    User(session['username']).add_I_Node(newTarget)
-    #    target = newTarget = request.form['new-target']
-    #    source = aifnode
-    #elif newSource is not None:
-    #    User(session['username']).add_I_Node(newSource)
-    #    source = newSource = request.form['new-source']
-    #    target = aifnode
-    supportSource = request.form.get('support-source',None)
-    opposeSource = request.form.get('oppose-source',None)
-    supportTarget = request.form.get('support-target',None)
-    opposeTarget = request.form.get('oppose-target',None)
-    sourceID = targetID = schema = None
-    if supportSource is not None:
-        sourceID=supportSource
-        targetID=aifnode.id
-        schema="supports"
-    elif opposeSource is not None:
-        sourceID=opposeSource
-        targetID=aifnode.id
-        schema="opposes"
-    elif supportTarget is not None:
-        sourceID=aifnode.id
-        targetID=supportTarget
-        schema="supports"
-    elif opposeTarget is not None:
-        sourceID=aifnode.id
-        targetID=opposeTarget
-        schema="opposes"
-
-    if (schema and sourceID and targetID) is not None:
-        if targetID != sourceID:
-            source=get_aifNode(sourceID).properties["title"]
-            target=get_aifNode(targetID).properties["title"]
-            schemaID = User(session['username']).add_S_Node(schema,sourceID,targetID)
-            if (target and source and schemaID) is not None:
-                create_new_schema_relationship(source,schemaID,target)
-            flash(source +" "+ schema +" "+ target,'success')
+    if (schema and source and target) is not None:
+        if target != source:
+            source_title=get_aifNode(source).properties["title"]
+            target_title=get_aifNode(target).properties["title"]
+            schema_id = User(session['username']).add_S_Node(schema,source,target)
+            if (target and source and schema) is not None:
+                create_new_schema_relationship(source_title,schema_id,target_title)
+            flash(source_title +" "+ schema +" "+ target_title,'success')
 
     return redirect(request.referrer)
 
@@ -297,7 +255,7 @@ def search(searchterm):
     return searchterm
 
 @app.route('/graphql',methods=['GET'])
-def getGraphql():
+def get_graphql():
     query=request.args.get('query')
 
     #JSON object
