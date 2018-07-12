@@ -30,13 +30,15 @@
     {% include 'navbar.html' %}
     <div class="todoapp"></div>
     <div class="container" >
+    <h1 class="serif flex justify-around">{{title if title else "WikiD"}}</h1>
   {% if session.username %}
     <h3>State your mind</h3>
     <form class="flex mb2" action="{{ url_for('add_I_Node') }}" method="post">
+        <dl>
             <dt>Statement:</dt>
-            <dd><input class="form-control" type="text"  name="title"></dd>
+            <dd><input class="form-control" type="text"  name="title" /></dd>
             <dt><button class="btn btn-outline-primary" type="submit">Share</button></dt>
-            
+        </dl>
     </form>
   {% endif %}
         <!-- <div id="randomuser"></div> -->

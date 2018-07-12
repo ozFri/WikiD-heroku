@@ -98,7 +98,6 @@ def add_S_node(source,schema,target):
     if not username or username == "Guest":
         flash('You must be logged in to agree with a post.','danger')
         return redirect(url_for('login'))
-    aifnodes = get_aifNodes()
     if (schema and source and target) is not None:
         if target != source:
             source_title=get_aifNode(source).properties["title"]
@@ -113,7 +112,7 @@ def add_S_node(source,schema,target):
 @app.route('/discussion')
 def discussion():
     session['discussionname'] = "General"
-    flash(session['discussionname'])
+    flash("Viweing discussion: " + session['discussionname'])
     return render_template('index.html')
 
 @app.route('/aifnodes/<aifnode_id>')
@@ -188,13 +187,14 @@ def add_I_Node():
 def vote_on_aifnode(aifnode_id,vote_type):
     username = session.get('username')
     discussionname = session.get('discussionname')
+    aifnode = AIFNode(aifnode_id)
     if not username or username == "Guest":
         flash('You must be logged in to vote on a post.','danger')
         return redirect(url_for('login'))
 
     User(username).vote_on_aifnode(aifnode_id, discussionname, vote_type)
 
-    flash('Voted "' + vote_type + '" on inode in discussion "' + discussionname + '"','primary')
+    flash('Voted "' + vote_type + '" on "' + aifnode.title + '" in discussion "' + discussionname + '"','primary')
     return redirect(request.referrer)
 
 @app.route('/<inode_id>/rename')

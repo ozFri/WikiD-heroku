@@ -1,16 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<h1 class="serif flex justify-around">WikiD</h1>
-  {% if session.username %}
-    <h3>State your mind</h3>
-    <form class="flex mb2" action="{{ url_for('add_I_Node') }}" method="post">
-            <dt>Statement:</dt>
-            <dd><input class="form-control" type="text"  name="title"></dd>
-            <dt><button class="btn btn-outline-primary" type="submit">Share</button></dt>
-            
-    </form>
-  {% endif %}
 
 <br>
 
