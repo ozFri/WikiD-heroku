@@ -23,7 +23,7 @@
                 <div class="col-12">
                     <a class="btn btn-{{'outline-' if user_vote != 'Agree'}}success" href="{{ url_for('vote_on_aifnode', aifnode_id=aifnode.id, vote_type='Agree') }}">
                         Agree
-                        <span class="badge badge-light">{{agree_votes}}</span>
+                        <span id="agree-votes" class="badge badge-light">{{agree_votes}}</span>
                     </a>
 
                     <a class="btn btn-{{'outline-' if user_vote != 'Disagree'}}danger" href="{{ url_for('vote_on_aifnode', aifnode_id=aifnode.id, vote_type='Disagree') }}">
