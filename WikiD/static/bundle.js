@@ -41,10 +41,23 @@ var app = (function () {
         }
         return text(data);
     }
+    function set_data(text, data) {
+        data = '' + data;
+        if (text.data !== data)
+            text.data = data;
+    }
 
     let current_component;
     function set_current_component(component) {
         current_component = component;
+    }
+    function get_current_component() {
+        if (!current_component)
+            throw new Error(`Function called outside component initialization`);
+        return current_component;
+    }
+    function onMount(fn) {
+        get_current_component().$$.on_mount.push(fn);
     }
 
     const dirty_components = [];
@@ -237,18 +250,23 @@ var app = (function () {
 
     	return {
     		c: function create() {
-    			t = text("boom");
+    			t = text(ctx.data);
     		},
 
     		l: function claim(nodes) {
-    			t = claim_text(nodes, "boom");
+    			t = claim_text(nodes, ctx.data);
     		},
 
     		m: function mount(target, anchor) {
     			insert(target, t, anchor);
     		},
 
-    		p: noop,
+    		p: function update(changed, ctx) {
+    			if (changed.data) {
+    				set_data(t, ctx.data);
+    			}
+    		},
+
     		i: noop,
     		o: noop,
 
@@ -260,10 +278,22 @@ var app = (function () {
     	};
     }
 
+    function instance($$self, $$props, $$invalidate) {
+    	let data = [];
+
+     onMount(async function() {
+         const response = await fetch("http://localhost:5000/api");
+         const json = await response.json();
+         $$invalidate('data', data = json);
+     });
+
+    	return { data };
+    }
+
     class Counter extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, null, create_fragment, safe_not_equal, []);
+    		init(this, options, instance, create_fragment, safe_not_equal, []);
     	}
     }
 

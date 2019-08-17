@@ -1,4 +1,12 @@
 <script>
-</script>
+ import { onMount } from "svelte";
 
-boom
+ let data = [];
+
+ onMount(async function() {
+     const response = await fetch("http://localhost:5000/api");
+     const json = await response.json();
+     data = json;
+ });
+</script>
+{data}

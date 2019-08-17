@@ -1,15 +1,21 @@
 from .models import AIFNode, get_aifNodes, get_aifNode, rename_iNode,create_new_schema_relationship, get_INodes
-from flask import Flask, request, session, redirect, url_for, render_template, flash,jsonify
+from flask import Flask, request, session, redirect, url_for, render_template, flash,jsonify #,Blueprints
+from flask_cors import CORS
+import logging
 from .user import User
 import requests
 from . import config
 
+# whatever = Blueprint("mold", __name__)
 app = Flask(__name__)
+logging.getLogger('flask_cors').level = logging.DEBUG
+CORS(app)
 
 #Render Index Page
-@app.route('/todo')
-def todo():
-    return render_template('todo.html')
+@app.route('/api', methods=[ "GET" ])
+def version():
+    d = 1;
+    return jsonify(d)
 
 @app.route('/index')
 @app.route('/')
